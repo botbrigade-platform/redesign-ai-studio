@@ -107,22 +107,13 @@
 
     <div class="main-content">
         <div class="chat-header">
-            <div class="breadcrumb">
-                <a href="agents.html">Agents</a>
-                <span>›</span>
-                <span>Public Data Insight Agent</span>
-            </div>
-            
-            <div class="chat-title-section">
-                <div class="chat-title">
-                    <div class="description-wrapper">
-                        <span class="chat-description">This agent specializes in analyzing public sector data and generating insights that support evidence-based decision-making. It can interpret datasets, summarize findings...</span>
-                        <div class="description-tooltip">
-                            This agent specializes in analyzing public sector data and generating insights that support evidence-based decision-making. It can interpret datasets, summarize findings, detect trends, and suggest policy implications — particularly within the context of government performance, transparency, and public service improvement. The agent is trained to understand Indonesian government data structures and can provide recommendations aligned with local governance standards.
-                        </div>
-                    </div>
+            <div class="chat-header-top">
+                <div class="breadcrumb">
+                    <a href="agents.html">Agents</a>
+                    <span>›</span>
+                    <span>Public Data Insight Agent</span>
                 </div>
-                <div class="chat-actions">
+                <div class="header-actions">
                     <button class="icon-btn" title="More options">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="1"/>
@@ -130,6 +121,34 @@
                             <circle cx="12" cy="19" r="1"/>
                         </svg>
                     </button>
+                    <div class="user-menu">
+                        <button class="user-avatar" onclick="toggleUserMenu()">
+                            <span>U</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-info">
+                                <div class="user-label">User</div>
+                                <div class="user-email">semilirbayu@gmail.com</div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span>Log out</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-description-section">
+                <div class="description-wrapper">
+                    <span class="chat-description">This agent specializes in analyzing public sector data and generating insights that support evidence-based decision-making. It can interpret datasets, summarize findings...</span>
+                    <div class="description-tooltip">
+                        This agent specializes in analyzing public sector data and generating insights that support evidence-based decision-making. It can interpret datasets, summarize findings, detect trends, and suggest policy implications — particularly within the context of government performance, transparency, and public service improvement. The agent is trained to understand Indonesian government data structures and can provide recommendations aligned with local governance standards.
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,6 +314,20 @@
             const sidebar = document.querySelector('.sidebar');
             sidebar.classList.toggle('collapsed');
         }
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && !userMenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
