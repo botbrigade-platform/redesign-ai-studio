@@ -102,45 +102,128 @@ redesign-ai-studio/
 
 ### Development Workflow
 
-#### Opening Files
-Since this is a static HTML project:
-- Open HTML files directly in a browser
-- Or use a simple HTTP server: `python3 -m http.server 8000`
-- Files can be edited in any text editor
+#### Running the Project
+
+**Option 1: Direct File Opening**
+```bash
+# Simply open in browser (works for basic viewing)
+open agents.html  # macOS
+# or double-click the file in file explorer
+```
+
+**Option 2: Local HTTP Server (Recommended)**
+```bash
+# Using Python
+python3 -m http.server 8000
+# Then visit: http://localhost:8000/agents.html
+
+# Using Node.js (if you have npx)
+npx http-server -p 8000
+
+# Using PHP
+php -S localhost:8000
+```
 
 #### Making Changes
 
-1. **Styling Changes**
-   - All CSS is in the external `styles.css` file (shared by both pages)
-   - CSS variables in `:root` for consistent theming
-   - Uses CSS Grid and Flexbox for layouts
-   - Responsive breakpoints at 1200px and 768px
-   - Edit `styles.css` to make styling changes that affect both pages
+**1. Styling Changes**
+- **Location:** All CSS in `styles.css` (shared by both pages)
+- **CSS Variables:** Defined in `:root` for consistent theming
+- **Layout System:** CSS Grid for agent cards, Flexbox for components
+- **Responsive Breakpoints:**
+  - Desktop: 1200px and above
+  - Tablet: 768px to 1199px
+  - Mobile: below 768px
+- **Workflow:** Edit `styles.css` → refresh browser → see changes
 
-2. **Content Updates**
-   - Agent data is hardcoded in HTML
-   - No backend/API integration yet
-   - Search, filters, and buttons are non-functional (UI only)
+**2. Content Updates**
+- **Agent Data:** Hardcoded in `agents.html` (`.agent-card` blocks)
+- **Chat Messages:** Hardcoded in `detail-chat.html` (`.message` blocks)
+- **No Build Step:** Changes visible immediately on page refresh
+- **Duplication:** Sidebar code is duplicated across both HTML files
 
-3. **Interactive Features**
-   - Minimal JS in inline `<script>` tags
-   - Currently: sidebar toggle function only
-   - Future: May need JS for search, filtering, form submission
+**3. JavaScript Implementation**
+- **Current JS:** Minimal inline `<script>` tag at bottom of each HTML file
+- **Implemented Function:** `toggleSidebar()` only
+  ```javascript
+  function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('collapsed');
+  }
+  ```
+- **Future Needs:** Search, filtering, form handling, chat interactions
+- **Recommendation:** Consider moving to external JS file when adding features
 
 #### Adding New Features
 
-**New Agent Card:**
-Copy existing `.agent-card` block and modify:
-- `.agent-name` - Agent title
-- `.agent-description` - Brief description (2-line clamp)
-- `.badge.status-*` - Status indicator
-- `.meta-value` - Model name and creation date
+**Adding a New Agent Card (in agents.html):**
 
-**New Chat Message:**
-Use `.message` or `.message.user-message` structure with:
-- `.message-avatar` - Avatar initials
-- `.message-bubble` - Message content
-- `.message-attachments` - Optional file attachments
+Find an existing `.agent-card` block and duplicate it. Modify these key elements:
+
+```html
+<div class="agent-card">
+  <div class="agent-header">
+    <div>
+      <h3 class="agent-name">Your Agent Name</h3>
+      <p class="agent-description">Brief description (max 2 lines, auto-truncated)</p>
+    </div>
+    <span class="badge status-active">Active</span>  <!-- or status-inactive -->
+  </div>
+
+  <div class="agent-meta">
+    <div class="meta-item">
+      <span class="meta-label">Model:</span>
+      <span class="meta-value">gpt-4</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Tools:</span>
+      <span class="badge tools-badge">5</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Created:</span>
+      <span class="meta-value">2024-03-15</span>
+    </div>
+  </div>
+
+  <div class="agent-actions">
+    <button class="btn-chat">Chat</button>
+  </div>
+</div>
+```
+
+**Adding a New Chat Message (in detail-chat.html):**
+
+For an agent message:
+```html
+<div class="message">
+  <div class="message-avatar">AG</div>
+  <div class="message-content">
+    <div class="message-bubble">Your message text here</div>
+    <div class="message-time">10:30 AM</div>
+  </div>
+</div>
+```
+
+For a user message:
+```html
+<div class="message user-message">
+  <div class="message-content">
+    <div class="message-bubble">User message text</div>
+    <div class="message-time">10:31 AM</div>
+  </div>
+  <div class="message-avatar">U</div>
+</div>
+```
+
+With file attachments:
+```html
+<div class="message-attachments">
+  <div class="attachment-item">
+    <div class="attachment-icon">[icon]</div>
+    <span class="attachment-name">filename.pdf</span>
+    <span class="attachment-size">2.4 MB</span>
+  </div>
+</div>
+```
 
 ### Design Considerations
 
@@ -199,15 +282,169 @@ Use `.message` or `.message.user-message` structure with:
 - Body text: 14px default, 12px for secondary/meta text
 - Line height: 1.5 for readability
 
-### Future Integration Notes
+### Current Implementation Status
 
-This is currently a static prototype. When integrating with a backend:
+**What Works (Functional):**
+- ✅ Sidebar collapse/expand toggle (JavaScript implemented)
+- ✅ Responsive layout adjustments
+- ✅ Hover states and visual feedback
+- ✅ Static content display
 
-1. Agent cards will need data from API endpoints
-2. Search/filter functionality needs implementation
-3. Chat messages should connect to websockets or polling
-4. File attachments need upload/storage handling
-5. User authentication/session management
-6. Agent CRUD operations for dashboard
+**What's UI-Only (Not Functional):**
+- ❌ Search bar (no search logic)
+- ❌ Filter dropdowns (no filtering logic)
+- ❌ Sort functionality (no sorting logic)
+- ❌ "Create Agent" button (no form/modal)
+- ❌ "Chat" buttons on agent cards (links to detail-chat.html only)
+- ❌ Message input/send (no chat backend)
+- ❌ File attachment uploads (UI only)
+- ❌ View toggle (Grid/List - no switching logic)
+- ❌ Conversation history items (static, no routing)
 
-The structure is designed to accommodate these features with minimal refactoring.
+### Future Integration Roadmap
+
+When integrating with a backend system:
+
+**Phase 1 - Data Layer:**
+1. Replace hardcoded agent data with API calls
+2. Implement agent CRUD operations (Create, Read, Update, Delete)
+3. Set up authentication/authorization system
+4. Create user session management
+
+**Phase 2 - Interactive Features:**
+5. Implement search functionality with debouncing
+6. Add working filter/sort logic with URL query params
+7. Build agent creation modal/form
+8. Implement view toggle (grid ↔ list)
+
+**Phase 3 - Chat Integration:**
+9. Connect chat to WebSocket or Server-Sent Events
+10. Implement real-time message streaming
+11. Add file upload/storage handling with preview generation
+12. Build conversation routing and state management
+
+**Phase 4 - Advanced Features:**
+13. Add agent configuration/settings panel
+14. Implement tool integration management
+15. Create analytics/usage tracking
+16. Build notification system
+
+**Architecture Notes:**
+- Current structure designed for minimal refactoring when adding backend
+- Consider using a lightweight framework (Alpine.js, htmx) or vanilla JS modules
+- CSS classes are semantic and ready for dynamic state changes
+- Component structure maps well to modern frontend frameworks if needed
+
+---
+
+## Quick Reference
+
+### Common CSS Classes
+
+**Layout:**
+- `.sidebar` - Main navigation sidebar (240px → 60px when collapsed)
+- `.sidebar.collapsed` - Collapsed state of sidebar
+- `.main-content` - Main content area (adjusts with sidebar)
+- `.header` - Page header with breadcrumb and title
+- `.controls` - Filter and search controls bar
+
+**Agent Cards:**
+- `.agent-card` - Individual agent card container
+- `.agent-header` - Card header with name and status
+- `.agent-name` - Agent title (h3)
+- `.agent-description` - Agent description (2-line clamp)
+- `.agent-meta` - Metadata section (model, tools, created)
+- `.agent-actions` - Action buttons area
+
+**Status & Badges:**
+- `.badge` - Base badge style
+- `.status-active` - Green active status badge
+- `.status-inactive` - Gray inactive status badge
+- `.tools-badge` - Badge showing tool count
+
+**Chat Components:**
+- `.message` - Agent message container
+- `.message.user-message` - User message (right-aligned)
+- `.message-avatar` - Circular avatar with initials
+- `.message-bubble` - Message content bubble
+- `.message-time` - Timestamp below message
+- `.message-attachments` - File attachment section
+
+**Buttons:**
+- `.btn-primary` - Primary action button (blue)
+- `.btn-secondary` - Secondary action button (outline)
+- `.btn-chat` - Chat action button
+- `.icon-btn` - Icon-only button
+- `.new-thread-btn` - New chat button in sidebar
+- `.sidebar-toggle` - Sidebar collapse toggle
+
+**Navigation:**
+- `.nav-item` - Navigation menu item
+- `.nav-item.active` - Active navigation item
+- `.conversation-item` - Conversation history item
+- `.conversation-item.active` - Active conversation
+
+**Utility:**
+- `.gov-accent` - Government brand stripe (blue/yellow)
+- `.breadcrumb` - Breadcrumb navigation
+- `.search-bar` - Search input container
+- `.filter-group` - Filter control group
+
+### Common Tasks Cheat Sheet
+
+**Toggle Sidebar:**
+```javascript
+document.querySelector('.sidebar').classList.toggle('collapsed');
+```
+
+**Change Agent Status:**
+```html
+<!-- From inactive to active -->
+<span class="badge status-active">Active</span>
+```
+
+**Add Custom Color:**
+```css
+:root {
+  --my-custom-color: #123456;
+}
+```
+
+**Adjust Responsive Breakpoint:**
+```css
+@media (max-width: 768px) {
+  /* Mobile styles */
+}
+```
+
+### File Locations
+
+| What to Edit | File | Line Range (approx) |
+|-------------|------|---------------------|
+| Agent cards data | `agents.html` | 130-500 |
+| Chat messages | `detail-chat.html` | 120-250 |
+| Color scheme | `styles.css` | 8-28 (:root) |
+| Sidebar styles | `styles.css` | 37-150 |
+| Agent card styles | `styles.css` | 300-600 |
+| Chat styles | `styles.css` | 700-1100 |
+| Responsive rules | `styles.css` | 1200-1318 |
+
+### Project Constraints
+
+**Must Preserve:**
+- ✓ Dinkominfo Surabaya brand colors (blue #072ac8, yellow #ffc600)
+- ✓ Government accent stripe in sidebar
+- ✓ Static HTML/CSS approach (no build tools)
+- ✓ Professional, accessible design
+
+**Can Modify:**
+- ✓ Layout proportions and spacing
+- ✓ Additional features and components
+- ✓ JavaScript implementation approach
+- ✓ Content and agent data
+
+**Recommendations:**
+- Keep government branding consistent
+- Maintain accessibility standards
+- Test on mobile devices
+- Consider progressive enhancement for JS features
