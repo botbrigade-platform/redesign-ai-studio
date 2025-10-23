@@ -1107,7 +1107,7 @@ body:has(.chat-messages) .page-header::after {
 }
 
 .message-content {
-    max-width: 70%;
+    max-width: 88%;
 }
 
 .user-message .message-content {
