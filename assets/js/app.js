@@ -74,34 +74,19 @@ function addChatSidebarContent() {
         <div class="nav-divider"></div>
         <div class="nav-label">Conversation History</div>
         <div class="conversation-item active">
-            <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="#chat-icon"/>
-            </svg>
-            <span>jelaskan apa saja y...</span>
+            <span>Jelaskan apa saja y...</span>
         </div>
         <div class="conversation-item">
-            <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="#chat-icon"/>
-            </svg>
-            <span>analisis data pendidik...</span>
+            <span>Analisis data pendidik...</span>
         </div>
         <div class="conversation-item">
-            <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="#chat-icon"/>
-            </svg>
-            <span>laporan kinerja pemer...</span>
+            <span>Laporan kinerja pemer...</span>
         </div>
         <div class="conversation-item">
-            <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="#chat-icon"/>
-            </svg>
-            <span>tren data publik 2024</span>
+            <span>Tren data publik 2024</span>
         </div>
         <div class="conversation-item">
-            <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="#chat-icon"/>
-            </svg>
-            <span>ringkasan statistik ke...</span>
+            <span>Ringkasan statistik ke...</span>
         </div>
     `;
 
