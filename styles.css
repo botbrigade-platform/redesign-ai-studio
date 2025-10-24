@@ -1958,3 +1958,42 @@ body:has(.chat-messages) .page-header::after {
 .line-numbers .line-numbers-rows {
   border-right: 1px solid #4a4a4a;
 }
+
+/* Chart Artifact */
+.artifact-chart {
+  animation: fadeIn 0.2s ease;
+}
+
+.chart-header {
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.chart-type {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  padding: 20px;
+  background: var(--background-white);
+  border-radius: 8px;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  height: auto;
+}

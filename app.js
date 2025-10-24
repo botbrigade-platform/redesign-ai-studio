@@ -307,6 +307,14 @@ function renderArtifact(artifact) {
   if (artifact.type === 'code' && typeof Prism !== 'undefined') {
     Prism.highlightAllUnder(contentArea);
   }
+
+  // Initialize chart
+  if (artifact.type === 'chart' && typeof Chart !== 'undefined') {
+    // Small delay to ensure canvas is rendered
+    setTimeout(() => {
+      initializeChart(artifact);
+    }, 50);
+  }
 }
 
 function updateArtifactListActive(artifactId) {

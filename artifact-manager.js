@@ -82,7 +82,40 @@ function renderCodeArtifact(artifact) {
 }
 
 function renderChartArtifact(artifact) {
-  return `<div class="artifact-chart">Chart rendering coming soon...</div>`;
+  const chartId = `chart-${artifact.id}`;
+
+  return `
+    <div class="artifact-chart">
+      <div class="chart-header">
+        <h3 class="chart-title">${escapeHTML(artifact.title)}</h3>
+        <span class="chart-type">${artifact.metadata.chartType.toUpperCase()} Chart</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="${chartId}"></canvas>
+      </div>
+    </div>
+  `;
+}
+
+function initializeChart(artifact) {
+  const chartId = `chart-${artifact.id}`;
+  const canvas = document.getElementById(chartId);
+
+  if (!canvas) {
+    console.error('Canvas not found for chart:', chartId);
+    return;
+  }
+
+  // Destroy existing chart if any
+  if (window.currentChart) {
+    window.currentChart.destroy();
+    window.currentChart = null;
+  }
+
+  const ctx = canvas.getContext('2d');
+  const config = JSON.parse(artifact.content);
+
+  window.currentChart = new Chart(ctx, config);
 }
 
 // Main render dispatcher
@@ -214,6 +247,58 @@ print("\\nVisualization saved: financial_analysis_q3_2024.png")`,
       lineCount: 45
     }
   });
+
+  // Sample Chart Artifact
+  ArtifactStore.add({
+    id: 'artifact-003',
+    type: 'chart',
+    title: 'Revenue Growth Q3 2024',
+    content: JSON.stringify({
+      type: 'bar',
+      data: {
+        labels: ['Q1 2024', 'Q2 2024', 'Q3 2024'],
+        datasets: [{
+          label: 'Revenue (Billions IDR)',
+          data: [37.5, 40.8, 45.8],
+          backgroundColor: 'rgba(7, 42, 200, 0.7)',
+          borderColor: '#072ac8',
+          borderWidth: 2
+        }, {
+          label: 'Target',
+          data: [38.0, 42.0, 44.0],
+          backgroundColor: 'rgba(255, 198, 0, 0.5)',
+          borderColor: '#ffc600',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Revenue (Billions IDR)'
+            }
+          }
+        }
+      }
+    }),
+    timestamp: '2025-10-24T13:18:00Z',
+    messageId: 'msg-005',
+    metadata: {
+      chartType: 'bar'
+    }
+  });
 }
 
 // Export for use in app.js
@@ -222,3 +307,4 @@ window.initializeSampleArtifacts = initializeSampleArtifacts;
 window.escapeHTML = escapeHTML;
 window.formatTimestamp = formatTimestamp;
 window.renderArtifactContent = renderArtifactContent;
+window.initializeChart = initializeChart;
