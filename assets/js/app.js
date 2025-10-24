@@ -71,15 +71,7 @@ function addChatSidebarContent() {
     if (!navSection) return;
 
     const chatSidebarHTML = `
-        <div style="padding: 0 16px; margin: 20px 16px 16px;">
-            <button class="new-thread-btn">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <use href="#plus-icon"/>
-                </svg>
-                <span>New Chat</span>
-            </button>
-        </div>
-
+        <div class="nav-divider"></div>
         <div class="nav-label">Conversation History</div>
         <div class="conversation-item active">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -110,6 +110,10 @@ body {
     height: 16px;
 }
 
+.sidebar.collapsed .nav-divider {
+    margin: 16px 8px 20px 8px;
+}
+
 .sidebar-toggle {
     position: absolute;
     top: 60px;
@@ -191,6 +195,12 @@ body {
     padding: 16px 0;
     flex: 1;
     overflow-y: auto;
+}
+
+.nav-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 16px 16px 20px 16px;
 }
 
 .nav-label {
@@ -941,6 +951,42 @@ body:has(.chat-messages) .page-header::after {
     justify-content: space-between;
     align-items: center;
     min-height: 32px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-chat-btn {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--primary-blue);
+    background: var(--background-white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    color: var(--primary-blue);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.new-chat-btn:hover {
+    background: var(--accent-blue-soft);
+    border-color: var(--primary-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(7, 42, 200, 0.15);
+}
+
+.new-chat-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .options-btn {
@@ -2206,6 +2252,10 @@ body.artifact-open .sidebar .nav-section > div[style*="padding: 0 16px"] {
 body.artifact-open .sidebar .settings-btn svg {
   width: 16px;
   height: 16px;
+}
+
+body.artifact-open .sidebar .nav-divider {
+  margin: 16px 8px 20px 8px;
 }
 
 /* Adjust main content margin for collapsed sidebar */
