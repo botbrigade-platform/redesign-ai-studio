@@ -260,6 +260,56 @@ function renderAgentCards() {
     agentsGrid.innerHTML = agentsData.map(agent => createAgentCard(agent)).join('');
 }
 
+// ============================================
+// ARTIFACT PANEL CONTROLS
+// ============================================
+
+function openArtifactPanel(artifactId) {
+  const panel = document.getElementById('artifact-panel');
+  const artifact = ArtifactStore.get(artifactId);
+
+  if (!artifact) {
+    console.error('Artifact not found:', artifactId);
+    return;
+  }
+
+  // Set as current
+  ArtifactStore.setCurrent(artifactId);
+
+  // Render artifact
+  renderArtifact(artifact);
+
+  // Update list to show active
+  updateArtifactListActive(artifactId);
+
+  // Open panel
+  panel.classList.add('open');
+}
+
+function closeArtifactPanel() {
+  const panel = document.getElementById('artifact-panel');
+  panel.classList.remove('open');
+
+  // Clear current
+  ArtifactStore.currentArtifact = null;
+}
+
+function toggleArtifactList() {
+  const dropdown = document.getElementById('artifact-list-dropdown');
+  dropdown.classList.toggle('open');
+}
+
+// Placeholder for rendering (will implement in next tasks)
+function renderArtifact(artifact) {
+  const contentArea = document.getElementById('artifact-content-area');
+  contentArea.innerHTML = `<div class="artifact-loading">Rendering ${artifact.type}...</div>`;
+}
+
+function updateArtifactListActive(artifactId) {
+  // Will implement when we add list items
+  console.log('Active artifact:', artifactId);
+}
+
 // ===== Page Initialization =====
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize based on current page
@@ -281,4 +331,44 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isAgentsPage) {
         renderAgentCards();
     }
+
+    // ============================================
+    // ARTIFACT EVENT LISTENERS
+    // ============================================
+
+    // Initialize sample artifacts
+    if (typeof initializeSampleArtifacts === 'function') {
+      initializeSampleArtifacts();
+    }
+
+    // Thumbnail click
+    document.addEventListener('click', (e) => {
+      const thumbnail = e.target.closest('.artifact-thumbnail');
+      if (thumbnail) {
+        const artifactId = thumbnail.dataset.artifactId;
+        openArtifactPanel(artifactId);
+      }
+    });
+
+    // Close button
+    const closeBtn = document.getElementById('close-panel-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeArtifactPanel);
+    }
+
+    // List toggle button
+    const listBtn = document.getElementById('artifact-list-btn');
+    if (listBtn) {
+      listBtn.addEventListener('click', toggleArtifactList);
+    }
+
+    // ESC key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const panel = document.getElementById('artifact-panel');
+        if (panel && panel.classList.contains('open')) {
+          closeArtifactPanel();
+        }
+      }
+    });
 });
