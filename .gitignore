@@ -52,3 +52,6 @@ bower_components/
 # Build outputs (for future if needed)
 dist/
 build/
+
+# Git worktrees
+.worktrees/
