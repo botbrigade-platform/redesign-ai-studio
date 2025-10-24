@@ -266,6 +266,7 @@ function renderAgentCards() {
 
 function openArtifactPanel(artifactId) {
   const panel = document.getElementById('artifact-panel');
+  const backdrop = document.getElementById('artifact-backdrop');
   const artifact = ArtifactStore.get(artifactId);
 
   if (!artifact) {
@@ -280,13 +281,21 @@ function openArtifactPanel(artifactId) {
   renderArtifactList();
   renderArtifact(artifact);
 
-  // Open panel
+  // Open panel and backdrop
   panel.classList.add('open');
+  if (backdrop) {
+    backdrop.classList.add('active');
+  }
 }
 
 function closeArtifactPanel() {
   const panel = document.getElementById('artifact-panel');
+  const backdrop = document.getElementById('artifact-backdrop');
+
   panel.classList.remove('open');
+  if (backdrop) {
+    backdrop.classList.remove('active');
+  }
 
   // Clear current
   ArtifactStore.currentArtifact = null;
@@ -427,6 +436,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
+
+    // Backdrop click (mobile)
+    const backdrop = document.getElementById('artifact-backdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', closeArtifactPanel);
+    }
 
     // ESC key to close
     document.addEventListener('keydown', (e) => {
