@@ -301,6 +301,68 @@ print("\\nVisualization saved: financial_analysis_q3_2024.png")`,
   });
 }
 
+function renderArtifactList() {
+  const artifacts = ArtifactStore.getAll();
+  const dropdown = document.getElementById('artifact-list-dropdown');
+
+  if (artifacts.length === 0) {
+    dropdown.innerHTML = '<div class="artifact-list-empty">No artifacts yet</div>';
+    return;
+  }
+
+  const listHTML = artifacts.map(artifact => {
+    const icon = getArtifactIcon(artifact.type);
+    const isActive = ArtifactStore.currentArtifact?.id === artifact.id ? 'active' : '';
+    const meta = getArtifactMeta(artifact);
+
+    return `
+      <div class="artifact-list-item ${isActive}" data-artifact-id="${artifact.id}">
+        <div class="list-item-icon">
+          ${icon}
+        </div>
+        <div class="list-item-info">
+          <span class="list-item-title">${escapeHTML(artifact.title)}</span>
+          <span class="list-item-meta">${meta} • ${formatTimestamp(artifact.timestamp)}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  dropdown.innerHTML = listHTML;
+}
+
+function getArtifactIcon(type) {
+  const icons = {
+    code: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="16 18 22 12 16 6"></polyline>
+      <polyline points="8 6 2 12 8 18"></polyline>
+    </svg>`,
+    document: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+    </svg>`,
+    chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="20" x2="12" y2="10"></line>
+      <line x1="18" y1="20" x2="18" y2="4"></line>
+      <line x1="6" y1="20" x2="6" y2="16"></line>
+    </svg>`
+  };
+  return icons[type] || icons.document;
+}
+
+function getArtifactMeta(artifact) {
+  switch (artifact.type) {
+    case 'code':
+      return `${artifact.language} • ${artifact.metadata.lineCount} lines`;
+    case 'document':
+      return `Document • ${artifact.metadata.wordCount} words`;
+    case 'chart':
+      return `${artifact.metadata.chartType} chart`;
+    default:
+      return artifact.type;
+  }
+}
+
 // Export for use in app.js
 window.ArtifactStore = ArtifactStore;
 window.initializeSampleArtifacts = initializeSampleArtifacts;
@@ -308,3 +370,4 @@ window.escapeHTML = escapeHTML;
 window.formatTimestamp = formatTimestamp;
 window.renderArtifactContent = renderArtifactContent;
 window.initializeChart = initializeChart;
+window.renderArtifactList = renderArtifactList;

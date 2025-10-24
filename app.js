@@ -276,11 +276,9 @@ function openArtifactPanel(artifactId) {
   // Set as current
   ArtifactStore.setCurrent(artifactId);
 
-  // Render artifact
+  // Render list and artifact
+  renderArtifactList();
   renderArtifact(artifact);
-
-  // Update list to show active
-  updateArtifactListActive(artifactId);
 
   // Open panel
   panel.classList.add('open');
@@ -315,11 +313,6 @@ function renderArtifact(artifact) {
       initializeChart(artifact);
     }, 50);
   }
-}
-
-function updateArtifactListActive(artifactId) {
-  // Will implement when we add list items
-  console.log('Active artifact:', artifactId);
 }
 
 // ===== Page Initialization =====
@@ -373,6 +366,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (listBtn) {
       listBtn.addEventListener('click', toggleArtifactList);
     }
+
+    // List item click
+    document.addEventListener('click', (e) => {
+      const listItem = e.target.closest('.artifact-list-item');
+      if (listItem) {
+        const artifactId = listItem.dataset.artifactId;
+        const artifact = ArtifactStore.get(artifactId);
+        if (artifact) {
+          ArtifactStore.setCurrent(artifactId);
+          renderArtifact(artifact);
+          renderArtifactList(); // Re-render to update active state
+
+          // Close dropdown
+          document.getElementById('artifact-list-dropdown').classList.remove('open');
+        }
+      }
+    });
 
     // ESC key to close
     document.addEventListener('keydown', (e) => {
