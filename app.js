@@ -297,6 +297,44 @@ function toggleArtifactList() {
   dropdown.classList.toggle('open');
 }
 
+function copyArtifactContent() {
+  const artifact = ArtifactStore.getCurrent();
+
+  if (!artifact) {
+    console.error('No artifact to copy');
+    return;
+  }
+
+  const contentToCopy = artifact.content;
+
+  // Copy to clipboard
+  navigator.clipboard.writeText(contentToCopy)
+    .then(() => {
+      showCopyFeedback();
+    })
+    .catch(err => {
+      console.error('Failed to copy:', err);
+      alert('Failed to copy to clipboard');
+    });
+}
+
+function showCopyFeedback() {
+  const copyBtn = document.getElementById('copy-artifact-btn');
+  const originalHTML = copyBtn.innerHTML;
+
+  copyBtn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  `;
+  copyBtn.classList.add('copied');
+
+  setTimeout(() => {
+    copyBtn.innerHTML = originalHTML;
+    copyBtn.classList.remove('copied');
+  }, 2000);
+}
+
 function renderArtifact(artifact) {
   const contentArea = document.getElementById('artifact-content-area');
   contentArea.innerHTML = renderArtifactContent(artifact);
@@ -359,6 +397,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.getElementById('close-panel-btn');
     if (closeBtn) {
       closeBtn.addEventListener('click', closeArtifactPanel);
+    }
+
+    // Copy button
+    const copyBtn = document.getElementById('copy-artifact-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', copyArtifactContent);
     }
 
     // List toggle button

@@ -1997,3 +1997,20 @@ body:has(.chat-messages) .page-header::after {
   max-width: 100%;
   height: auto;
 }
+
+/* Copy Button Feedback */
+.copy-artifact-btn.copied {
+  background: var(--success-green-light) !important;
+  border-color: var(--success-green) !important;
+  color: var(--success-green) !important;
+}
+
+.copy-artifact-btn.copied svg {
+  animation: checkmark 0.3s ease;
+}
+
+@keyframes checkmark {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
