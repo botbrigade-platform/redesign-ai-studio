@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotBrigade AI Studio - Static Prototype</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .landing-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-blue-soft) 0%, var(--background-gray) 100%);
+            padding: 24px;
+        }
+
+        .landing-card {
+            background: var(--background-white);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .landing-header {
+            margin-bottom: 32px;
+        }
+
+        .landing-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .landing-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .landing-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .landing-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--accent-yellow-soft);
+            color: var(--primary-yellow-dark);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .landing-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 32px 0;
+        }
+
+        .landing-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .landing-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: var(--background-gray);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .landing-link:hover {
+            background: var(--accent-blue-soft);
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 42, 200, 0.15);
+        }
+
+        .landing-link-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .landing-link-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            flex-shrink: 0;
+        }
+
+        .landing-link-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .landing-link-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .landing-link-arrow {
+            color: var(--primary-blue);
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .landing-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .landing-footer-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .landing-footer-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .landing-footer-link {
+            font-size: 13px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .landing-footer-link:hover {
+            background: var(--accent-blue-soft);
+        }
+
+        .gov-stripe {
+            height: 6px;
+            background: linear-gradient(to right, var(--primary-blue) 50%, var(--primary-yellow) 50%);
+            border-radius: 16px 16px 0 0;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .landing-card {
+                padding: 32px 24px;
+            }
+
+            .landing-title {
+                font-size: 24px;
+            }
+
+            .landing-subtitle {
+                font-size: 14px;
+            }
+
+            .landing-link {
+                padding: 16px;
+            }
+
+            .landing-link-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-card">
+            <!-- Government Stripe -->
+            <div class="gov-stripe"></div>
+
+            <!-- Header -->
+            <div class="landing-header">
+                <div class="landing-logo">BB</div>
+                <h1 class="landing-title">BotBrigade AI Studio</h1>
+                <p class="landing-subtitle">Static Prototype Dashboard</p>
+                <span class="landing-badge">Dinkominfo Surabaya</span>
+            </div>
+
+            <div class="landing-divider"></div>
+
+            <!-- Navigation Links -->
+            <div class="landing-nav">
+                <a href="pages/agents.html" class="landing-link">
+                    <div class="landing-link-content">
+                        <div class="landing-link-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <div class="landing-link-info">
+                            <h3>AI Agents Dashboard</h3>
+                            <p>Browse and manage AI agents</p>
+                        </div>
+                    </div>
+                    <span class="landing-link-arrow">→</span>
+                </a>
+
+                <a href="pages/detail-chat.html" class="landing-link">
+                    <div class="landing-link-content">
+                        <div class="landing-link-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="landing-link-info">
+                            <h3>Chat Interface</h3>
+                            <p>Interact with AI agents and view artifacts</p>
+                        </div>
+                    </div>
+                    <span class="landing-link-arrow">→</span>
+                </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="landing-footer">
+                <p class="landing-footer-text">📚 Design Reference Documentation</p>
+                <div class="landing-footer-links">
+                    <a href="README.md" class="landing-footer-link">README</a>
+                    <a href="docs/DESIGN_SYSTEM.md" class="landing-footer-link">Design System</a>
+                    <a href="docs/TESTING.md" class="landing-footer-link">Testing Guide</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect after 3 seconds (optional - commented out)
+        // setTimeout(() => {
+        //     window.location.href = 'pages/agents.html';
+        // }, 3000);
+    </script>
+</body>
+</html>

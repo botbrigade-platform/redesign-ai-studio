@@ -7,7 +7,14 @@
       "mcp__chrome-devtools__take_screenshot",
       "mcp__chrome-devtools__click",
       "Bash(wc:*)",
-      "mcp__chrome-devtools__list_pages"
+      "mcp__chrome-devtools__list_pages",
+      "Bash(python3 -m http.server:*)",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__chrome-devtools__get_console_message",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__chrome-devtools__resize_page",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

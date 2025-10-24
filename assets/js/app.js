@@ -42,7 +42,7 @@ async function loadSidebar(activePage = 'agents') {
     if (!sidebarContainer) return;
 
     try {
-        const response = await fetch('sidebar.html');
+        const response = await fetch('../../components/sidebar.html');
         const html = await response.text();
         sidebarContainer.innerHTML = html;
 
@@ -74,7 +74,7 @@ function addChatSidebarContent() {
         <div style="padding: 0 16px; margin: 20px 16px 16px;">
             <button class="new-thread-btn">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <use href="icons.svg#plus-icon"/>
+                    <use href="#plus-icon"/>
                 </svg>
                 <span>New Chat</span>
             </button>
@@ -83,31 +83,31 @@ function addChatSidebarContent() {
         <div class="nav-label">Conversation History</div>
         <div class="conversation-item active">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#chat-icon"/>
+                <use href="#chat-icon"/>
             </svg>
             <span>jelaskan apa saja y...</span>
         </div>
         <div class="conversation-item">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#chat-icon"/>
+                <use href="#chat-icon"/>
             </svg>
             <span>analisis data pendidik...</span>
         </div>
         <div class="conversation-item">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#chat-icon"/>
+                <use href="#chat-icon"/>
             </svg>
             <span>laporan kinerja pemer...</span>
         </div>
         <div class="conversation-item">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#chat-icon"/>
+                <use href="#chat-icon"/>
             </svg>
             <span>tren data publik 2024</span>
         </div>
         <div class="conversation-item">
             <svg class="conversation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#chat-icon"/>
+                <use href="#chat-icon"/>
             </svg>
             <span>ringkasan statistik ke...</span>
         </div>
@@ -120,7 +120,7 @@ function addChatSidebarContent() {
     const settingsHTML = `
         <div class="settings-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#settings-icon"/>
+                <use href="#settings-icon"/>
             </svg>
             <span>Settings</span>
         </div>
@@ -187,7 +187,7 @@ function createAgentCard(agent) {
     const toolsBadge = agent.tools > 0 ? `
         <span class="badge tools">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="icons.svg#tool-icon"/>
+                <use href="#tool-icon"/>
             </svg>
             ${agent.tools} Tools
         </span>
@@ -201,7 +201,7 @@ function createAgentCard(agent) {
                 </div>
                 <button class="menu-btn">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <use href="icons.svg#menu-dots"/>
+                        <use href="#menu-dots"/>
                     </svg>
                 </button>
             </div>
@@ -232,19 +232,19 @@ function createAgentCard(agent) {
             <div class="card-actions">
                 <a href="detail-chat.html" class="btn btn-chat">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <use href="icons.svg#chat-icon"/>
+                        <use href="#chat-icon"/>
                     </svg>
                     Chat
                 </a>
                 <button class="btn btn-secondary">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <use href="icons.svg#eye-icon"/>
+                        <use href="#eye-icon"/>
                     </svg>
                     View
                 </button>
                 <button class="btn btn-secondary">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <use href="icons.svg#edit-icon"/>
+                        <use href="#edit-icon"/>
                     </svg>
                     Edit
                 </button>

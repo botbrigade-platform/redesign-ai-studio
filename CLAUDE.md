@@ -12,21 +12,48 @@ BotBrigade AI Studio is a static HTML/CSS dashboard for managing AI agents, desi
 
 ### Technology Stack
 - **Pure HTML/CSS** - No build process, bundlers, or frameworks
-- **Vanilla JavaScript** - Minimal inline JS for interactive features (sidebar toggle only)
+- **Vanilla JavaScript** - Interactive features (sidebar toggle, search, filters, artifact panel)
+- **External Libraries (CDN)** - Prism.js (syntax highlighting), Chart.js (charts), Marked.js (markdown)
 - **Static Files** - Can be served directly via any web server or opened in browser
 
-### File Structure
+### File Structure (Updated 2025-10-24)
 ```
 redesign-ai-studio/
-├── agents.html          (526 lines) - Main dashboard with agent grid/list view
-├── detail-chat.html     (299 lines) - Chat interface for agent interaction
-└── styles.css          (1318 lines) - Shared stylesheet for all pages
+├── README.md                         # Main documentation with quick start guide
+├── CLAUDE.md                         # This file - guidance for Claude Code
+├── index.html                        # Landing page with navigation
+│
+├── pages/                            # HTML pages
+│   ├── agents.html                   # Main dashboard with agent grid/list view
+│   └── detail-chat.html              # Chat interface with artifact display panel
+│
+├── assets/                           # All static assets
+│   ├── css/
+│   │   └── styles.css                # Comprehensive stylesheet (~45KB, 1300+ lines)
+│   ├── js/
+│   │   ├── app.js                    # Main JavaScript logic (~18KB)
+│   │   └── artifact-manager.js       # Artifact panel functionality (~10KB)
+│   └── icons/
+│       └── icons.svg                 # SVG icon library
+│
+├── components/                       # Reusable HTML components
+│   └── sidebar.html                  # Sidebar navigation component
+│
+└── docs/                             # Documentation
+    ├── DESIGN_SYSTEM.md              # Brand colors, typography, component guide
+    ├── TESTING.md                    # Manual testing checklist
+    ├── screenshots/                  # Page screenshots for documentation
+    └── plans/                        # Design & implementation plans
 ```
 
 **Core Pages:**
-- `agents.html` - "AI Agents Dashboard - Improved" with filtering, search, and agent cards
-- `detail-chat.html` - Chat interface with conversation history and message bubbles
-- `styles.css` - Comprehensive stylesheet with Dinkominfo Surabaya brand system
+- `index.html` - Landing page with links to dashboard and chat interface
+- `pages/agents.html` - AI Agents Dashboard with filtering, search, agent cards
+- `pages/detail-chat.html` - Chat interface with artifact display panel (code/document/chart)
+
+**Key JavaScript Files:**
+- `assets/js/app.js` - Sidebar loading, search, filters, user menu, agent card generation
+- `assets/js/artifact-manager.js` - Artifact panel (slide-in panel, syntax highlighting, copy-to-clipboard)
 
 ### Design System
 
@@ -93,6 +120,20 @@ redesign-ai-studio/
    - **Input Area:** Text input with send button and attachment option
    - **Tooltip:** Truncated agent descriptions show full text on hover (`.description-tooltip`)
 
+4. **Artifact Display Panel** (detail-chat.html) - NEW FEATURE
+   - **Slide-in Panel:** 500px width panel from right side (`.artifact-panel`)
+   - **Artifact Types:**
+     - **Code:** Syntax highlighting via Prism.js (Python, JavaScript, etc.)
+     - **Documents:** Markdown rendering via Marked.js
+     - **Charts:** Interactive charts via Chart.js
+   - **Features:**
+     - Copy to clipboard functionality
+     - Artifact list dropdown (shows all artifacts in conversation)
+     - Close button and ESC key support
+   - **Responsive:** Desktop = slide-in panel, Mobile = fullscreen overlay with backdrop
+   - **Thumbnails:** Artifact previews in chat messages (`.artifact-thumbnail`)
+   - **State:** Managed by `artifact-manager.js`
+
 #### State Management Patterns
 
 - **Sidebar collapse**: Toggle `.collapsed` class on `.sidebar` element
@@ -107,7 +148,8 @@ redesign-ai-studio/
 **Option 1: Direct File Opening**
 ```bash
 # Simply open in browser (works for basic viewing)
-open agents.html  # macOS
+open index.html  # macOS - landing page
+open pages/agents.html  # macOS - direct to dashboard
 # or double-click the file in file explorer
 ```
 
@@ -115,7 +157,10 @@ open agents.html  # macOS
 ```bash
 # Using Python
 python3 -m http.server 8000
-# Then visit: http://localhost:8000/agents.html
+# Then visit:
+# http://localhost:8000/                    (landing page)
+# http://localhost:8000/pages/agents.html   (dashboard)
+# http://localhost:8000/pages/detail-chat.html  (chat)
 
 # Using Node.js (if you have npx)
 npx http-server -p 8000
@@ -127,68 +172,56 @@ php -S localhost:8000
 #### Making Changes
 
 **1. Styling Changes**
-- **Location:** All CSS in `styles.css` (shared by both pages)
+- **Location:** All CSS in `assets/css/styles.css` (shared by all pages)
 - **CSS Variables:** Defined in `:root` for consistent theming
 - **Layout System:** CSS Grid for agent cards, Flexbox for components
 - **Responsive Breakpoints:**
   - Desktop: 1200px and above
   - Tablet: 768px to 1199px
   - Mobile: below 768px
-- **Workflow:** Edit `styles.css` → refresh browser → see changes
+- **Workflow:** Edit `assets/css/styles.css` → refresh browser → see changes
 
 **2. Content Updates**
-- **Agent Data:** Hardcoded in `agents.html` (`.agent-card` blocks)
-- **Chat Messages:** Hardcoded in `detail-chat.html` (`.message` blocks)
+- **Agent Data:** Generated dynamically by `assets/js/app.js` (see `generateAgentCards()`)
+- **Chat Messages:** Hardcoded in `pages/detail-chat.html` (`.message` blocks)
+- **Sidebar:** Loaded from `components/sidebar.html` via fetch in `app.js`
 - **No Build Step:** Changes visible immediately on page refresh
-- **Duplication:** Sidebar code is duplicated across both HTML files
 
 **3. JavaScript Implementation**
-- **Current JS:** Minimal inline `<script>` tag at bottom of each HTML file
-- **Implemented Function:** `toggleSidebar()` only
-  ```javascript
-  function toggleSidebar() {
-      document.querySelector('.sidebar').classList.toggle('collapsed');
-  }
-  ```
-- **Future Needs:** Search, filtering, form handling, chat interactions
-- **Recommendation:** Consider moving to external JS file when adding features
+- **Main Logic:** `assets/js/app.js` (~18KB)
+  - `loadSidebar()` - Fetches and loads sidebar component
+  - `generateAgentCards()` - Dynamically creates agent cards from data
+  - `toggleSidebar()` - Sidebar collapse/expand
+  - `toggleUserMenu()` - User dropdown menu
+  - Search and filter functionality (UI-only, no backend)
+- **Artifact Panel:** `assets/js/artifact-manager.js` (~10KB)
+  - `openArtifact()` - Opens artifact panel with content
+  - `closeArtifact()` - Closes panel
+  - `copyArtifact()` - Copy to clipboard
+  - Syntax highlighting integration (Prism.js)
+  - Chart rendering integration (Chart.js)
+  - Markdown rendering integration (Marked.js)
 
 #### Adding New Features
 
-**Adding a New Agent Card (in agents.html):**
+**Adding a New Agent Card:**
 
-Find an existing `.agent-card` block and duplicate it. Modify these key elements:
+Agents are now generated dynamically from the `agentsData` array in `assets/js/app.js`.
+To add a new agent, add an object to the array:
 
-```html
-<div class="agent-card">
-  <div class="agent-header">
-    <div>
-      <h3 class="agent-name">Your Agent Name</h3>
-      <p class="agent-description">Brief description (max 2 lines, auto-truncated)</p>
-    </div>
-    <span class="badge status-active">Active</span>  <!-- or status-inactive -->
-  </div>
-
-  <div class="agent-meta">
-    <div class="meta-item">
-      <span class="meta-label">Model:</span>
-      <span class="meta-value">gpt-4</span>
-    </div>
-    <div class="meta-item">
-      <span class="meta-label">Tools:</span>
-      <span class="badge tools-badge">5</span>
-    </div>
-    <div class="meta-item">
-      <span class="meta-label">Created:</span>
-      <span class="meta-value">2024-03-15</span>
-    </div>
-  </div>
-
-  <div class="agent-actions">
-    <button class="btn-chat">Chat</button>
-  </div>
-</div>
+```javascript
+// In assets/js/app.js, find the agentsData array and add:
+{
+    name: 'Your Agent Name',
+    description: 'Brief description of what the agent does',
+    model: 'gpt-4',
+    tools: 5,
+    status: 'active', // or 'inactive'
+    created: '2024-03-15'
+}
 ```
+
+The `generateAgentCards()` function will automatically create the HTML markup.
 
 **Adding a New Chat Message (in detail-chat.html):**
 
@@ -421,13 +454,16 @@ document.querySelector('.sidebar').classList.toggle('collapsed');
 
 | What to Edit | File | Line Range (approx) |
 |-------------|------|---------------------|
-| Agent cards data | `agents.html` | 130-500 |
-| Chat messages | `detail-chat.html` | 120-250 |
-| Color scheme | `styles.css` | 8-28 (:root) |
-| Sidebar styles | `styles.css` | 37-150 |
-| Agent card styles | `styles.css` | 300-600 |
-| Chat styles | `styles.css` | 700-1100 |
-| Responsive rules | `styles.css` | 1200-1318 |
+| Agent cards data | `assets/js/app.js` | agentsData array |
+| Sidebar component | `components/sidebar.html` | Full file |
+| Chat messages | `pages/detail-chat.html` | 120-400 |
+| Artifact panel logic | `assets/js/artifact-manager.js` | Full file |
+| Color scheme | `assets/css/styles.css` | 8-28 (:root) |
+| Sidebar styles | `assets/css/styles.css` | 37-150 |
+| Agent card styles | `assets/css/styles.css` | 300-600 |
+| Chat styles | `assets/css/styles.css` | 700-1100 |
+| Artifact panel styles | `assets/css/styles.css` | 800-1000 |
+| Responsive rules | `assets/css/styles.css` | 1200-1318 |
 
 ### Project Constraints
 
