@@ -1722,3 +1722,107 @@ body:has(.chat-messages) .page-header::after {
   font-size: 14px;
   margin: 0;
 }
+
+/* Artifact Thumbnail */
+.artifact-thumbnail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  background: var(--accent-blue-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.artifact-thumbnail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(7, 42, 200, 0.15);
+  border-color: var(--primary-blue-light);
+}
+
+.artifact-thumbnail[data-artifact-type="document"] {
+  background: var(--accent-yellow-soft);
+}
+
+.artifact-thumbnail[data-artifact-type="document"]:hover {
+  box-shadow: 0 4px 12px rgba(255, 198, 0, 0.15);
+  border-color: var(--primary-yellow);
+}
+
+.artifact-thumbnail[data-artifact-type="chart"] {
+  background: var(--success-green-light);
+}
+
+.artifact-thumbnail[data-artifact-type="chart"]:hover {
+  box-shadow: 0 4px 12px rgba(0, 166, 81, 0.15);
+  border-color: var(--success-green);
+}
+
+.thumbnail-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.thumbnail-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary-blue);
+}
+
+.artifact-thumbnail[data-artifact-type="document"] .thumbnail-icon svg {
+  color: var(--primary-yellow-dark);
+}
+
+.artifact-thumbnail[data-artifact-type="chart"] .thumbnail-icon svg {
+  color: var(--success-green);
+}
+
+.thumbnail-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.thumbnail-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thumbnail-meta {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.thumbnail-open-btn {
+  padding: 6px 12px;
+  background: var(--background-white);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--primary-blue);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.thumbnail-open-btn:hover {
+  background: var(--primary-blue);
+  color: white;
+  border-color: var(--primary-blue);
+}
