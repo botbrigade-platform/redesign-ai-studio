@@ -302,6 +302,11 @@ function toggleArtifactList() {
 function renderArtifact(artifact) {
   const contentArea = document.getElementById('artifact-content-area');
   contentArea.innerHTML = renderArtifactContent(artifact);
+
+  // Apply syntax highlighting for code
+  if (artifact.type === 'code' && typeof Prism !== 'undefined') {
+    Prism.highlightAllUnder(contentArea);
+  }
 }
 
 function updateArtifactListActive(artifactId) {

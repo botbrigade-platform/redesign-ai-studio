@@ -68,7 +68,17 @@ function renderDocumentArtifact(artifact) {
 }
 
 function renderCodeArtifact(artifact) {
-  return `<div class="artifact-code">Code rendering coming soon...</div>`;
+  const escapedCode = escapeHTML(artifact.content);
+
+  return `
+    <div class="artifact-code">
+      <div class="code-header">
+        <span class="code-language">${escapeHTML(artifact.language.toUpperCase())}</span>
+        <span class="code-lines">${artifact.metadata.lineCount} lines</span>
+      </div>
+      <pre class="line-numbers"><code class="language-${artifact.language}">${escapedCode}</code></pre>
+    </div>
+  `;
 }
 
 function renderChartArtifact(artifact) {
@@ -143,6 +153,65 @@ Laporan ini menyajikan analisis mendalam terhadap performa keuangan Q3 2024, men
     messageId: 'msg-003',
     metadata: {
       wordCount: 1240
+    }
+  });
+
+  // Sample Code Artifact
+  ArtifactStore.add({
+    id: 'artifact-002',
+    type: 'code',
+    title: 'Python Data Analysis Script',
+    language: 'python',
+    content: `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load financial data
+df = pd.read_csv('financial_data_q3_2024.csv')
+
+# Calculate quarterly growth
+df['growth_rate'] = df.groupby('sector')['revenue'].pct_change() * 100
+
+# Segment analysis
+sector_summary = df.groupby('sector').agg({
+    'revenue': ['sum', 'mean'],
+    'growth_rate': 'mean'
+}).round(2)
+
+print("\\nSector Performance Summary:")
+print(sector_summary)
+
+# Profitability metrics
+df['gross_margin'] = (df['gross_profit'] / df['revenue']) * 100
+df['operating_margin'] = (df['operating_income'] / df['revenue']) * 100
+df['net_margin'] = (df['net_income'] / df['revenue']) * 100
+
+print(f"\\nQ3 2024 Margins:")
+print(f"Gross Margin: {df['gross_margin'].iloc[-1]:.1f}%")
+print(f"Operating Margin: {df['operating_margin'].iloc[-1]:.1f}%")
+print(f"Net Margin: {df['net_margin'].iloc[-1]:.1f}%")
+
+# Visualization
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+sector_revenue = df.groupby('sector')['revenue'].sum()
+plt.pie(sector_revenue, labels=sector_revenue.index, autopct='%1.1f%%')
+plt.title('Revenue Distribution by Sector')
+
+plt.subplot(1, 2, 2)
+plt.plot(df['date'], df['revenue'], marker='o')
+plt.title('Revenue Trend Q3 2024')
+plt.xlabel('Date')
+plt.ylabel('Revenue (Millions)')
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+plt.savefig('financial_analysis_q3_2024.png', dpi=300, bbox_inches='tight')
+print("\\nVisualization saved: financial_analysis_q3_2024.png")`,
+    timestamp: '2025-10-24T13:17:30Z',
+    messageId: 'msg-004',
+    metadata: {
+      lineCount: 45
     }
   });
 }
