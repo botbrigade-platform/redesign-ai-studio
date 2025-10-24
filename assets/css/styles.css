@@ -950,7 +950,7 @@ body:has(.chat-messages) .page-header::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 32px;
+    height: 56px;
 }
 
 .header-actions {
@@ -1016,8 +1016,42 @@ body:has(.chat-messages) .page-header::after {
     height: 18px;
 }
 
+.show-artifact-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--primary-blue);
+    background: var(--background-white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary-blue);
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.show-artifact-btn:hover {
+    background: var(--accent-blue-soft);
+    color: var(--primary-blue-dark);
+    border-color: var(--primary-blue-dark);
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(7, 42, 200, 0.15);
+}
+
+.show-artifact-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Hide show-artifact button when artifact panel is open */
+body.artifact-open .show-artifact-btn {
+    display: none;
+}
+
 .header-top .breadcrumb {
     font-size: 13px;
+    line-height: 1;
 }
 
 .header-description {
@@ -1584,7 +1618,8 @@ body:has(.chat-messages) .page-header::after {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 12px 20px;
+  height: 56px;
   border-bottom: 1px solid var(--border-color);
   background: var(--background-white);
   flex-shrink: 0;
@@ -1634,8 +1669,8 @@ body:has(.chat-messages) .page-header::after {
 /* Action Buttons */
 .copy-artifact-btn,
 .close-panel-btn {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2111,12 +2146,6 @@ body:has(.chat-messages) .page-header::after {
     display: none; /* Hide text, show count only on very small screens */
   }
 
-  .copy-artifact-btn,
-  .close-panel-btn {
-    width: 32px;
-    height: 32px;
-  }
-
   /* Content area padding */
   .artifact-content-area {
     padding: 16px;
@@ -2300,6 +2329,7 @@ body.artifact-open .artifact-panel {
   width: auto;
   grid-column: 2;
   grid-row: 1 / -1;
+  padding-top: 19.5px;
   transition: none;
   border-left: 1px solid var(--border-color);
   box-shadow: none;

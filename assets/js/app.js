@@ -318,6 +318,20 @@ function closeArtifactPanel() {
   ArtifactStore.currentArtifact = null;
 }
 
+function getLatestArtifact() {
+  const artifacts = ArtifactStore.getAll();
+  if (artifacts.length === 0) {
+    return null;
+  }
+
+  // Sort by timestamp (most recent first)
+  const sorted = artifacts.sort((a, b) => {
+    return new Date(b.timestamp) - new Date(a.timestamp);
+  });
+
+  return sorted[0];
+}
+
 function toggleArtifactList() {
   const dropdown = document.getElementById('artifact-list-dropdown');
   dropdown.classList.toggle('open');
@@ -510,6 +524,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = document.getElementById('copy-artifact-btn');
     if (copyBtn) {
       copyBtn.addEventListener('click', copyArtifactContent);
+    }
+
+    // Show artifact button (header)
+    const showArtifactBtn = document.getElementById('show-artifact-btn');
+    if (showArtifactBtn) {
+      showArtifactBtn.addEventListener('click', () => {
+        const latestArtifact = getLatestArtifact();
+        if (latestArtifact) {
+          openArtifactPanel(latestArtifact.id);
+        } else {
+          console.warn('No artifacts available to display');
+        }
+      });
     }
 
     // List toggle button
