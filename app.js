@@ -299,10 +299,9 @@ function toggleArtifactList() {
   dropdown.classList.toggle('open');
 }
 
-// Placeholder for rendering (will implement in next tasks)
 function renderArtifact(artifact) {
   const contentArea = document.getElementById('artifact-content-area');
-  contentArea.innerHTML = `<div class="artifact-loading">Rendering ${artifact.type}...</div>`;
+  contentArea.innerHTML = renderArtifactContent(artifact);
 }
 
 function updateArtifactListActive(artifactId) {

@@ -50,6 +50,45 @@ function formatTimestamp(isoString) {
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
+// Rendering Functions
+function renderDocumentArtifact(artifact) {
+  const html = marked.parse(artifact.content);
+
+  return `
+    <div class="artifact-document">
+      <div class="document-header">
+        <h3 class="document-title">${escapeHTML(artifact.title)}</h3>
+        <span class="document-meta">${artifact.metadata.wordCount.toLocaleString()} words</span>
+      </div>
+      <div class="document-content markdown-body">
+        ${html}
+      </div>
+    </div>
+  `;
+}
+
+function renderCodeArtifact(artifact) {
+  return `<div class="artifact-code">Code rendering coming soon...</div>`;
+}
+
+function renderChartArtifact(artifact) {
+  return `<div class="artifact-chart">Chart rendering coming soon...</div>`;
+}
+
+// Main render dispatcher
+function renderArtifactContent(artifact) {
+  switch (artifact.type) {
+    case 'document':
+      return renderDocumentArtifact(artifact);
+    case 'code':
+      return renderCodeArtifact(artifact);
+    case 'chart':
+      return renderChartArtifact(artifact);
+    default:
+      return `<div class="artifact-error">Unknown artifact type: ${artifact.type}</div>`;
+  }
+}
+
 // Initialize sample artifacts
 function initializeSampleArtifacts() {
   // Sample Document Artifact
@@ -113,3 +152,4 @@ window.ArtifactStore = ArtifactStore;
 window.initializeSampleArtifacts = initializeSampleArtifacts;
 window.escapeHTML = escapeHTML;
 window.formatTimestamp = formatTimestamp;
+window.renderArtifactContent = renderArtifactContent;

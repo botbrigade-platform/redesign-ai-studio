@@ -1826,3 +1826,89 @@ body:has(.chat-messages) .page-header::after {
   color: white;
   border-color: var(--primary-blue);
 }
+
+/* Document Artifact */
+.artifact-document {
+  animation: fadeIn 0.2s ease;
+}
+
+.document-header {
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.document-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.document-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.markdown-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.markdown-body h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.markdown-body h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+}
+
+.markdown-body p {
+  margin: 12px 0;
+}
+
+.markdown-body ul, .markdown-body ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.markdown-body li {
+  margin: 8px 0;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.markdown-body code {
+  background: var(--background-gray);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 24px 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
