@@ -2136,3 +2136,211 @@ body:has(.chat-messages) .page-header::after {
     font-size: 18px;
   }
 }
+
+/* ============================================
+   SPLIT-PANE LAYOUT FOR ARTIFACT
+   ============================================ */
+
+/* When artifact is open, apply split-pane layout */
+body.artifact-open {
+  overflow: hidden;
+}
+
+/* Auto-collapse sidebar when artifact opens */
+body.artifact-open .sidebar {
+  width: 60px;
+}
+
+body.artifact-open .sidebar .logo-text,
+body.artifact-open .sidebar .nav-item span,
+body.artifact-open .sidebar .nav-label,
+body.artifact-open .sidebar .conversation-item,
+body.artifact-open .sidebar .new-thread-btn span {
+  display: none;
+}
+
+body.artifact-open .sidebar .settings-btn span {
+  display: none;
+}
+
+body.artifact-open .sidebar .logo {
+  justify-content: center;
+  padding: 0 0 20px 0;
+}
+
+body.artifact-open .sidebar .logo-icon {
+  margin: 0;
+}
+
+body.artifact-open .sidebar .nav-item {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+body.artifact-open .sidebar .settings-btn {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+body.artifact-open .sidebar .new-thread-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 20px auto 16px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.artifact-open .sidebar .new-thread-btn svg {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+}
+
+body.artifact-open .sidebar .nav-section > div[style*="padding: 0 16px"] {
+  padding: 0 !important;
+  margin: 20px 0 16px 0 !important;
+}
+
+body.artifact-open .sidebar .settings-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Adjust main content margin for collapsed sidebar */
+body.artifact-open .main-content {
+  margin-left: 60px;
+}
+
+/* Split main-content into grid layout */
+body.artifact-open .main-content:has(.chat-messages) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  padding: 0;
+  height: 100vh;
+}
+
+/* Page header spans first column, first row */
+body.artifact-open .page-header {
+  grid-column: 1;
+  grid-row: 1;
+  transition: all 0.3s ease;
+}
+
+/* Chat messages in first column, second row */
+body.artifact-open .chat-messages {
+  grid-column: 1;
+  grid-row: 2;
+  transition: all 0.3s ease;
+}
+
+/* Chat input in first column, third row */
+body.artifact-open .chat-input-container {
+  grid-column: 1;
+  grid-row: 3;
+  transition: all 0.3s ease;
+}
+
+/* Artifact panel spans second column, all rows */
+body.artifact-open .artifact-panel {
+  position: relative;
+  right: 0;
+  width: auto;
+  grid-column: 2;
+  grid-row: 1 / -1;
+  transition: none;
+  border-left: 1px solid var(--border-color);
+  box-shadow: none;
+}
+
+/* Resize Handle */
+.resize-handle {
+  display: none;
+  position: fixed;
+  top: 0;
+  width: 6px;
+  height: 100vh;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 101;
+  transition: background 0.2s ease;
+}
+
+body.artifact-open .resize-handle {
+  display: block;
+  left: calc(50vw + 30px);
+  transform: translateX(-3px);
+}
+
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.resize-handle:hover::before,
+.resize-handle.resizing::before {
+  background: var(--primary-blue);
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+  background: rgba(7, 42, 200, 0.1);
+}
+
+/* Smooth transitions */
+body.artifact-open .sidebar,
+body.artifact-open .main-content,
+body.artifact-open .chat-messages,
+body.artifact-open .page-header,
+body.artifact-open .chat-input-container {
+  transition: all 0.3s ease;
+}
+
+/* Mobile: Keep fullscreen overlay behavior */
+@media (max-width: 768px) {
+  /* Disable split layout on mobile */
+  body.artifact-open .main-content:has(.chat-messages) {
+    display: flex !important;
+    flex-direction: column;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+  }
+
+  body.artifact-open .page-header,
+  body.artifact-open .chat-messages,
+  body.artifact-open .chat-input-container {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  body.artifact-open .artifact-panel {
+    position: fixed;
+    right: 0;
+    width: 100vw;
+    z-index: 100;
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  body.artifact-open .resize-handle {
+    display: none;
+  }
+
+  /* Sidebar stays hidden on mobile */
+  body.artifact-open .sidebar {
+    transform: translateX(-100%);
+  }
+
+  body.artifact-open .main-content {
+    margin-left: 0;
+  }
+}

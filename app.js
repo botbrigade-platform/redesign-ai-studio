@@ -264,9 +264,15 @@ function renderAgentCards() {
 // ARTIFACT PANEL CONTROLS
 // ============================================
 
+// Store sidebar state
+let sidebarStateBeforeArtifact = {
+  wasCollapsed: false
+};
+
 function openArtifactPanel(artifactId) {
   const panel = document.getElementById('artifact-panel');
   const backdrop = document.getElementById('artifact-backdrop');
+  const sidebar = document.querySelector('.sidebar');
   const artifact = ArtifactStore.get(artifactId);
 
   if (!artifact) {
@@ -274,12 +280,18 @@ function openArtifactPanel(artifactId) {
     return;
   }
 
+  // Save current sidebar state
+  sidebarStateBeforeArtifact.wasCollapsed = sidebar?.classList.contains('collapsed') || false;
+
   // Set as current
   ArtifactStore.setCurrent(artifactId);
 
   // Render list and artifact
   renderArtifactList();
   renderArtifact(artifact);
+
+  // Apply split-pane layout
+  document.body.classList.add('artifact-open');
 
   // Open panel and backdrop
   panel.classList.add('open');
@@ -291,6 +303,19 @@ function openArtifactPanel(artifactId) {
 function closeArtifactPanel() {
   const panel = document.getElementById('artifact-panel');
   const backdrop = document.getElementById('artifact-backdrop');
+  const sidebar = document.querySelector('.sidebar');
+
+  // Remove split-pane layout
+  document.body.classList.remove('artifact-open');
+
+  // Restore sidebar state
+  if (sidebar) {
+    if (sidebarStateBeforeArtifact.wasCollapsed) {
+      sidebar.classList.add('collapsed');
+    } else {
+      sidebar.classList.remove('collapsed');
+    }
+  }
 
   panel.classList.remove('open');
   if (backdrop) {
@@ -362,6 +387,86 @@ function renderArtifact(artifact) {
   }
 }
 
+// ============================================
+// RESIZE FUNCTIONALITY
+// ============================================
+
+let isResizing = false;
+let startX = 0;
+let startWidth = 0;
+
+function initializeResizeHandler() {
+  const resizeHandle = document.getElementById('resize-handle');
+  if (!resizeHandle) return;
+
+  resizeHandle.addEventListener('mousedown', startResize);
+}
+
+function startResize(e) {
+  isResizing = true;
+  startX = e.clientX;
+
+  const chatMessages = document.querySelector('.chat-messages');
+  if (chatMessages) {
+    startWidth = chatMessages.offsetWidth;
+  }
+
+  const resizeHandle = document.getElementById('resize-handle');
+  if (resizeHandle) {
+    resizeHandle.classList.add('resizing');
+  }
+
+  document.addEventListener('mousemove', doResize);
+  document.addEventListener('mouseup', stopResize);
+
+  // Prevent text selection during resize
+  e.preventDefault();
+}
+
+function doResize(e) {
+  if (!isResizing) return;
+
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarWidth = sidebar ? sidebar.offsetWidth : 60;
+  const mainContent = document.querySelector('.main-content');
+
+  if (!mainContent) return;
+
+  const totalWidth = window.innerWidth - sidebarWidth;
+  const deltaX = e.clientX - startX;
+  const newWidth = startWidth + deltaX;
+
+  // Calculate percentage
+  const percentage = (newWidth / totalWidth) * 100;
+
+  // Constrain between 30% and 70%
+  const constrainedPercentage = Math.max(30, Math.min(70, percentage));
+
+  // Update CSS Grid columns
+  mainContent.style.gridTemplateColumns = `${constrainedPercentage}fr ${100 - constrainedPercentage}fr`;
+
+  // Update resize handle position
+  const resizeHandle = document.getElementById('resize-handle');
+  if (resizeHandle) {
+    const handlePosition = sidebarWidth + (totalWidth * constrainedPercentage / 100);
+    resizeHandle.style.left = `${handlePosition}px`;
+  }
+}
+
+function stopResize() {
+  if (!isResizing) return;
+
+  isResizing = false;
+
+  const resizeHandle = document.getElementById('resize-handle');
+  if (resizeHandle) {
+    resizeHandle.classList.remove('resizing');
+  }
+
+  document.removeEventListener('mousemove', doResize);
+  document.removeEventListener('mouseup', stopResize);
+}
+
 // ===== Page Initialization =====
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize based on current page
@@ -378,6 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize page-specific features
     if (isChatPage) {
         initChatTextarea();
+        initializeResizeHandler();
     }
 
     if (isAgentsPage) {
