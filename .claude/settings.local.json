@@ -14,7 +14,9 @@
       "mcp__chrome-devtools__get_console_message",
       "mcp__chrome-devtools__list_network_requests",
       "mcp__chrome-devtools__resize_page",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__chrome-devtools__close_page"
     ],
     "deny": [],
     "ask": []
