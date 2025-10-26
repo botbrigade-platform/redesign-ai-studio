@@ -53,7 +53,7 @@ function initializeGridstack() {
     },
     minRow: 1,
     disableOneColumnMode: false
-  });
+  }, '#dashboardGrid');
 
   // Save grid changes to sessionStorage
   grid.on('change', function(event, items) {

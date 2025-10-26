@@ -2499,16 +2499,20 @@ body.artifact-open .chat-input-container {
   background: transparent;
   margin-top: 24px;
   width: 100% !important;
+  min-width: 100% !important;
 }
 
-.grid-stack-item {
+.grid-stack > .grid-stack-item {
   touch-action: none;
+  min-width: 0 !important;
 }
 
-.grid-stack-item-content {
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
   overflow: visible !important;
   inset: 0 !important;
   cursor: default;
+  left: 0 !important;
+  right: 0 !important;
 }
 
 .grid-stack-placeholder > .placeholder-content {
