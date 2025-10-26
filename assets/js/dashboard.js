@@ -350,6 +350,347 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
+/**
+ * Load preview dashboard with 10 sample charts
+ */
+function loadPreviewDashboard() {
+  const previewCharts = generatePreviewCharts();
+  savePinnedCharts(previewCharts);
+
+  // Reload dashboard
+  location.reload();
+}
+
+/**
+ * Generate 10 sample charts with different types and sizes
+ */
+function generatePreviewCharts() {
+  const charts = [];
+  const now = Date.now();
+
+  // Chart 1: Line Chart - Revenue Trend (2x2)
+  charts.push({
+    id: 'preview-chart-1',
+    artifactId: 'preview-artifact-1',
+    name: 'Revenue Trend Q1-Q4 2024',
+    type: 'chart',
+    chartType: 'line',
+    pinnedAt: new Date(now - 9000).toISOString(),
+    gridPosition: { x: 0, y: 0, w: 2, h: 2 },
+    chartConfig: {
+      type: 'line',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [{
+          label: 'Revenue (Billions IDR)',
+          data: [37.5, 40.8, 45.8, 48.2],
+          borderColor: '#072ac8',
+          backgroundColor: 'rgba(7, 42, 200, 0.1)',
+          borderWidth: 2,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'top' } }
+      }
+    }
+  });
+
+  // Chart 2: Bar Chart - Sector Performance (3x2)
+  charts.push({
+    id: 'preview-chart-2',
+    artifactId: 'preview-artifact-2',
+    name: 'Sector Performance Comparison',
+    type: 'chart',
+    chartType: 'bar',
+    pinnedAt: new Date(now - 8000).toISOString(),
+    gridPosition: { x: 2, y: 0, w: 3, h: 2 },
+    chartConfig: {
+      type: 'bar',
+      data: {
+        labels: ['Sector A', 'Sector B', 'Sector C', 'Sector D'],
+        datasets: [{
+          label: 'Revenue',
+          data: [26.6, 12.8, 6.4, 8.5],
+          backgroundColor: 'rgba(7, 42, 200, 0.7)',
+          borderColor: '#072ac8',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } }
+      }
+    }
+  });
+
+  // Chart 3: Pie Chart - Market Share (1x2)
+  charts.push({
+    id: 'preview-chart-3',
+    artifactId: 'preview-artifact-3',
+    name: 'Market Share Distribution',
+    type: 'chart',
+    chartType: 'pie',
+    pinnedAt: new Date(now - 7000).toISOString(),
+    gridPosition: { x: 5, y: 0, w: 1, h: 2 },
+    chartConfig: {
+      type: 'pie',
+      data: {
+        labels: ['Product A', 'Product B', 'Product C', 'Others'],
+        datasets: [{
+          data: [35, 28, 22, 15],
+          backgroundColor: [
+            'rgba(7, 42, 200, 0.8)',
+            'rgba(255, 198, 0, 0.8)',
+            'rgba(0, 166, 81, 0.8)',
+            'rgba(156, 163, 175, 0.6)'
+          ],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    }
+  });
+
+  // Chart 4: Doughnut Chart - Budget Allocation (2x2)
+  charts.push({
+    id: 'preview-chart-4',
+    artifactId: 'preview-artifact-4',
+    name: 'Budget Allocation 2024',
+    type: 'chart',
+    chartType: 'doughnut',
+    pinnedAt: new Date(now - 6000).toISOString(),
+    gridPosition: { x: 0, y: 2, w: 2, h: 2 },
+    chartConfig: {
+      type: 'doughnut',
+      data: {
+        labels: ['Development', 'Operations', 'Marketing', 'Research'],
+        datasets: [{
+          data: [40, 30, 20, 10],
+          backgroundColor: [
+            '#072ac8',
+            '#ffc600',
+            '#00A651',
+            '#9ca3af'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'right' } }
+      }
+    }
+  });
+
+  // Chart 5: Bar Chart - Monthly Growth (2x2)
+  charts.push({
+    id: 'preview-chart-5',
+    artifactId: 'preview-artifact-5',
+    name: 'Monthly User Growth',
+    type: 'chart',
+    chartType: 'bar',
+    pinnedAt: new Date(now - 5000).toISOString(),
+    gridPosition: { x: 2, y: 2, w: 2, h: 2 },
+    chartConfig: {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'New Users',
+          data: [1200, 1900, 1500, 2200, 2800, 3100],
+          backgroundColor: 'rgba(255, 198, 0, 0.7)',
+          borderColor: '#ffc600',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } }
+      }
+    }
+  });
+
+  // Chart 6: Line Chart - Customer Satisfaction (2x2)
+  charts.push({
+    id: 'preview-chart-6',
+    artifactId: 'preview-artifact-6',
+    name: 'Customer Satisfaction Score',
+    type: 'chart',
+    chartType: 'line',
+    pinnedAt: new Date(now - 4000).toISOString(),
+    gridPosition: { x: 4, y: 2, w: 2, h: 2 },
+    chartConfig: {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Satisfaction (%)',
+          data: [85, 87, 89, 92],
+          borderColor: '#00A651',
+          backgroundColor: 'rgba(0, 166, 81, 0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: { y: { min: 80, max: 100 } }
+      }
+    }
+  });
+
+  // Chart 7: Bar Chart - Team Performance (3x2)
+  charts.push({
+    id: 'preview-chart-7',
+    artifactId: 'preview-artifact-7',
+    name: 'Team Performance Metrics',
+    type: 'chart',
+    chartType: 'bar',
+    pinnedAt: new Date(now - 3000).toISOString(),
+    gridPosition: { x: 0, y: 4, w: 3, h: 2 },
+    chartConfig: {
+      type: 'bar',
+      data: {
+        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+        datasets: [{
+          label: 'Tasks Completed',
+          data: [45, 52, 38, 61, 47],
+          backgroundColor: 'rgba(7, 42, 200, 0.6)',
+          borderColor: '#072ac8',
+          borderWidth: 1
+        }, {
+          label: 'Target',
+          data: [50, 50, 50, 50, 50],
+          backgroundColor: 'rgba(255, 198, 0, 0.4)',
+          borderColor: '#ffc600',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'top' } }
+      }
+    }
+  });
+
+  // Chart 8: Pie Chart - Traffic Sources (2x2)
+  charts.push({
+    id: 'preview-chart-8',
+    artifactId: 'preview-artifact-8',
+    name: 'Traffic Sources',
+    type: 'chart',
+    chartType: 'pie',
+    pinnedAt: new Date(now - 2000).toISOString(),
+    gridPosition: { x: 3, y: 4, w: 2, h: 2 },
+    chartConfig: {
+      type: 'pie',
+      data: {
+        labels: ['Direct', 'Organic Search', 'Social Media', 'Referral'],
+        datasets: [{
+          data: [30, 45, 15, 10],
+          backgroundColor: [
+            '#072ac8',
+            '#ffc600',
+            '#00A651',
+            '#9ca3af'
+          ],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    }
+  });
+
+  // Chart 9: Line Chart - Server Response Time (1x2)
+  charts.push({
+    id: 'preview-chart-9',
+    artifactId: 'preview-artifact-9',
+    name: 'Server Response Time',
+    type: 'chart',
+    chartType: 'line',
+    pinnedAt: new Date(now - 1000).toISOString(),
+    gridPosition: { x: 5, y: 4, w: 1, h: 2 },
+    chartConfig: {
+      type: 'line',
+      data: {
+        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+        datasets: [{
+          label: 'Response Time (ms)',
+          data: [120, 115, 125, 118, 122, 119],
+          borderColor: '#00A651',
+          backgroundColor: 'rgba(0, 166, 81, 0.1)',
+          borderWidth: 2,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } }
+      }
+    }
+  });
+
+  // Chart 10: Bar Chart - Quarterly Comparison (6x2 - full width)
+  charts.push({
+    id: 'preview-chart-10',
+    artifactId: 'preview-artifact-10',
+    name: 'Quarterly Revenue Comparison (2023 vs 2024)',
+    type: 'chart',
+    chartType: 'bar',
+    pinnedAt: new Date(now).toISOString(),
+    gridPosition: { x: 0, y: 6, w: 6, h: 2 },
+    chartConfig: {
+      type: 'bar',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [{
+          label: '2023',
+          data: [32.5, 35.2, 38.1, 40.3],
+          backgroundColor: 'rgba(156, 163, 175, 0.6)',
+          borderColor: '#9ca3af',
+          borderWidth: 2
+        }, {
+          label: '2024',
+          data: [37.5, 40.8, 45.8, 48.2],
+          backgroundColor: 'rgba(7, 42, 200, 0.7)',
+          borderColor: '#072ac8',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: false }
+        }
+      }
+    }
+  });
+
+  return charts;
+}
+
 // Export functions for use in HTML onclick attributes
 window.refreshChart = refreshChart;
 window.expandChart = expandChart;
@@ -357,3 +698,4 @@ window.removeChart = removeChart;
 window.closeFullscreenModal = closeFullscreenModal;
 window.confirmRemoveChart = confirmRemoveChart;
 window.closeConfirmDialog = closeConfirmDialog;
+window.loadPreviewDashboard = loadPreviewDashboard;
