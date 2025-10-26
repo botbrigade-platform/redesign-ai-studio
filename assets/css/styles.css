@@ -2498,6 +2498,7 @@ body.artifact-open .chat-input-container {
 .grid-stack {
   background: transparent;
   margin-top: 24px;
+  width: 100% !important;
 }
 
 .grid-stack-item {
@@ -2514,6 +2515,11 @@ body.artifact-open .chat-input-container {
   background: rgba(7, 42, 200, 0.1);
   border: 2px dashed var(--primary-blue);
   border-radius: 8px;
+}
+
+/* Clear All Button */
+.clear-all-btn {
+  margin-left: auto;
 }
 
 /* Dashboard Chart Card */

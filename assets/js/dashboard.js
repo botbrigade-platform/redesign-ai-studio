@@ -24,8 +24,10 @@ function initDashboard() {
 
   if (pinnedCharts.length === 0) {
     showEmptyState();
+    hideClearAllButton();
   } else {
     hideEmptyState();
+    showClearAllButton();
     initializeGridstack();
     renderPinnedCharts(pinnedCharts);
   }
@@ -323,6 +325,64 @@ function showEmptyState() {
  */
 function hideEmptyState() {
   document.getElementById('emptyState').style.display = 'none';
+}
+
+/**
+ * Show clear all button
+ */
+function showClearAllButton() {
+  const clearBtn = document.getElementById('clearAllBtn');
+  if (clearBtn) {
+    clearBtn.style.display = '';
+  }
+}
+
+/**
+ * Hide clear all button
+ */
+function hideClearAllButton() {
+  const clearBtn = document.getElementById('clearAllBtn');
+  if (clearBtn) {
+    clearBtn.style.display = 'none';
+  }
+}
+
+/**
+ * Clear all charts from dashboard
+ */
+function clearAllCharts() {
+  const charts = loadPinnedCharts();
+
+  if (charts.length === 0) {
+    return;
+  }
+
+  // Show confirmation dialog
+  document.getElementById('confirmMessage').textContent =
+    `Are you sure you want to remove all ${charts.length} chart${charts.length > 1 ? 's' : ''} from the dashboard?`;
+
+  // Store special flag for clearing all
+  pendingRemoveChartId = 'CLEAR_ALL';
+
+  // Show confirmation dialog
+  document.getElementById('confirmDialog').classList.add('open');
+
+  // Attach confirm button handler
+  document.getElementById('confirmRemoveBtn').onclick = function() {
+    if (pendingRemoveChartId === 'CLEAR_ALL') {
+      // Clear all charts from sessionStorage
+      sessionStorage.removeItem('pinnedCharts');
+
+      // Close dialog
+      closeConfirmDialog();
+
+      // Show success toast
+      showToast('All charts cleared from dashboard', 'success');
+
+      // Reload page to show empty state
+      location.reload();
+    }
+  };
 }
 
 /**
@@ -699,3 +759,4 @@ window.closeFullscreenModal = closeFullscreenModal;
 window.confirmRemoveChart = confirmRemoveChart;
 window.closeConfirmDialog = closeConfirmDialog;
 window.loadPreviewDashboard = loadPreviewDashboard;
+window.clearAllCharts = clearAllCharts;
