@@ -47,14 +47,19 @@
 ### Option 1: Buka Langsung di Browser
 Cara tercepat untuk preview:
 ```bash
-# macOS
-open agents.html
+# macOS - Landing page
+open index.html
+
+# macOS - Langsung ke halaman tertentu
+open pages/dashboard.html
+open pages/agents.html
+open pages/detail-chat.html
 
 # Windows
-start agents.html
+start index.html
 
 # Linux
-xdg-open agents.html
+xdg-open index.html
 ```
 
 ### Option 2: Python HTTP Server (Recommended)
@@ -63,7 +68,10 @@ xdg-open agents.html
 python3 -m http.server 8000
 
 # Kemudian buka browser ke:
-# http://localhost:8000/agents.html
+# http://localhost:8000/                    (landing page)
+# http://localhost:8000/pages/dashboard.html   (dashboard)
+# http://localhost:8000/pages/agents.html      (agents)
+# http://localhost:8000/pages/detail-chat.html (chat)
 ```
 
 ### Option 3: Node.js HTTP Server
@@ -74,7 +82,7 @@ npx http-server -p 8000
 # Atau gunakan serve
 npx serve
 
-# Buka: http://localhost:8000/agents.html
+# Buka: http://localhost:8000/
 ```
 
 ### Option 4: VS Code Live Server
@@ -88,45 +96,88 @@ npx serve
 ```
 redesign-ai-studio/
 │
-├── README.md                    # ← Dokumentasi utama (file ini)
-├── CLAUDE.md                    # Dokumentasi untuk Claude AI assistant
-├── .gitignore                   # Git ignore configuration
+├── README.md                         # ← Dokumentasi utama (file ini)
+├── CLAUDE.md                         # Dokumentasi untuk Claude AI assistant
+├── .gitignore                        # Git ignore configuration
+├── index.html                        # Landing page dengan navigasi
 │
-├── agents.html                  # 🔵 MAIN PAGE: Dashboard agents
-├── detail-chat.html             # 🔵 MAIN PAGE: Chat interface
-├── sidebar.html                 # Reusable sidebar component
+├── pages/                            # HTML pages
+│   ├── dashboard.html                # 🔵 Dashboard dengan pinned charts
+│   ├── agents.html                   # 🔵 AI Agents grid/list view
+│   └── detail-chat.html              # 🔵 Chat interface + artifacts
 │
-├── styles.css                   # Stylesheet utama (45KB - comprehensive)
-├── app.js                       # JavaScript utama (18KB)
-├── artifact-manager.js          # Artifact panel management logic
-├── icons.svg                    # SVG icon library
+├── assets/                           # Static assets
+│   ├── css/
+│   │   └── styles.css                # Stylesheet utama (~100KB)
+│   ├── js/
+│   │   ├── app.js                    # JavaScript utama (~30KB)
+│   │   ├── artifact-manager.js       # Artifact panel logic (~15KB)
+│   │   └── dashboard.js              # Dashboard grid logic (~35KB)
+│   └── icons/
+│       └── icons.svg                 # SVG icon library
 │
-└── docs/                        # Dokumentasi tambahan
-    ├── DESIGN_SYSTEM.md         # (Segera) Brand & component guide
-    ├── TESTING.md               # Testing checklist
-    └── plans/                   # Implementation plans & specs
+├── components/                       # Reusable components
+│   └── sidebar.html                  # Sidebar navigation
+│
+└── docs/                             # Dokumentasi tambahan
+    ├── DESIGN_SYSTEM.md              # ✅ Brand & component guide
+    ├── TESTING.md                    # Testing checklist
+    └── plans/                        # Implementation plans & specs
         ├── 2025-10-24-artifact-display-design.md
-        └── 2025-10-24-artifact-display-implementation.md
+        ├── 2025-10-24-artifact-display-implementation.md
+        └── 2025-10-26-dashboard-pinned-charts-design.md
 ```
 
 ### File Prioritas untuk Developers
 
 | File | Ukuran | Fungsi | Penting |
 |------|--------|--------|---------|
-| **agents.html** | 4.6KB | Dashboard halaman utama dengan agent cards | ⭐⭐⭐ |
-| **detail-chat.html** | 26KB | Chat interface + artifact display | ⭐⭐⭐ |
-| **styles.css** | 45KB | Semua styling (design system) | ⭐⭐⭐ |
-| **app.js** | 18KB | JavaScript logic (sidebar, search, filters) | ⭐⭐ |
-| **artifact-manager.js** | 10KB | Artifact panel functionality | ⭐⭐ |
-| **icons.svg** | 8KB | Icon library (inline SVG) | ⭐ |
+| **pages/dashboard.html** | 13KB | Dashboard dengan pinned charts & Gridstack | ⭐⭐⭐ |
+| **pages/agents.html** | 13KB | AI Agents grid dengan search & filter | ⭐⭐⭐ |
+| **pages/detail-chat.html** | 37KB | Chat interface + artifact display panel | ⭐⭐⭐ |
+| **assets/css/styles.css** | ~100KB | Complete design system & styling | ⭐⭐⭐ |
+| **assets/js/dashboard.js** | ~35KB | Dashboard grid logic (Gridstack integration) | ⭐⭐ |
+| **assets/js/app.js** | ~30KB | Core app logic (sidebar, menus, utilities) | ⭐⭐ |
+| **assets/js/artifact-manager.js** | ~15KB | Artifact panel rendering & state | ⭐⭐ |
 
 ---
 
 ## 📄 Halaman Utama
 
-### 1. `agents.html` - Dashboard Agents
+### 1. `dashboard.html` - Dashboard dengan Pinned Charts
 
-**Entry point utama aplikasi.**
+**Dashboard untuk visualisasi chart yang di-pin dari conversations.**
+
+**Fitur:**
+- Pin chart artifacts dari chat ke dashboard
+- Drag-and-drop repositioning (Gridstack.js)
+- Resize charts via corner/edge handles
+- Fullscreen chart modal untuk detail view
+- Remove charts dengan confirmation dialog
+- Auto-layout untuk grid organization
+- Clear all charts functionality
+- sessionStorage persistence (reset saat browser close)
+- Empty state dengan preview option
+
+**Key Components:**
+- `.grid-stack` - Gridstack container (12-column grid)
+- `.dashboard-chart-card` - Individual chart card dengan controls
+- `.fullscreen-chart-modal` - Fullscreen chart viewer
+- `.confirmation-dialog` - Remove confirmation modal
+
+**Tech:**
+- Gridstack.js 10.x untuk drag/drop grid
+- Chart.js untuk rendering charts
+- sessionStorage untuk state persistence
+
+**Screenshot:**
+<!-- TODO: Add screenshot dashboard.html desktop & mobile -->
+
+---
+
+### 2. `agents.html` - AI Agents Dashboard
+
+**Browse dan manage AI agents.**
 
 **Fitur:**
 - Grid/list view toggle untuk agent cards
@@ -148,7 +199,7 @@ redesign-ai-studio/
 
 ---
 
-### 2. `detail-chat.html` - Chat Interface
+### 3. `detail-chat.html` - Chat Interface
 
 **Chat interface dengan artifact display panel.**
 
@@ -186,6 +237,7 @@ redesign-ai-studio/
 - **Prism.js** - Syntax highlighting untuk code artifacts
 - **Chart.js** - Chart rendering untuk visualizations
 - **Marked.js** - Markdown parsing untuk documents
+- **Gridstack.js** - Drag-and-drop grid layout untuk dashboard
 
 ### Design Approach
 - **No build process** - Static files, langsung buka di browser
@@ -213,6 +265,11 @@ redesign-ai-studio/
 | Chart rendering | ✅ Working | Chart.js integration |
 | Copy to clipboard | ✅ Working | Artifact panel |
 | Mobile fullscreen overlay | ✅ Working | Artifact panel responsive |
+| **Dashboard pinned charts** | ✅ Working | `dashboard.js` + Gridstack |
+| **Drag-and-drop grid** | ✅ Working | Gridstack.js integration |
+| **Chart resize & fullscreen** | ✅ Working | Dashboard chart controls |
+| **Pin charts from chat** | ✅ Working | Pin modal + sessionStorage |
+| **sessionStorage persistence** | ✅ Working | Dashboard state management |
 
 ### ⚠️ UI-Only (Static/Non-functional)
 | Feature | Status | Notes |
@@ -266,7 +323,7 @@ redesign-ai-studio/
 - **Icons:** 16px-20px, stroke-width: 2, `currentColor` inheritance
 - **Spacing:** 8px base unit (8, 12, 16, 20, 24, 32px)
 
-📖 **Dokumentasi lengkap:** Lihat [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) *(coming soon)*
+📖 **Dokumentasi lengkap:** Lihat [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ---
 
@@ -365,5 +422,5 @@ Untuk pertanyaan implementasi atau klarifikasi design decisions:
 
 ---
 
-**Last Updated:** 2025-10-24
-**Version:** 1.0 (Static Prototype)
+**Last Updated:** 2025-10-26
+**Version:** 1.1 (Static Prototype + Dashboard Feature)

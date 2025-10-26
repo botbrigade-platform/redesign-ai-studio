@@ -12,11 +12,11 @@ BotBrigade AI Studio is a static HTML/CSS dashboard for managing AI agents, desi
 
 ### Technology Stack
 - **Pure HTML/CSS** - No build process, bundlers, or frameworks
-- **Vanilla JavaScript** - Interactive features (sidebar toggle, search, filters, artifact panel)
-- **External Libraries (CDN)** - Prism.js (syntax highlighting), Chart.js (charts), Marked.js (markdown)
+- **Vanilla JavaScript** - Interactive features (sidebar toggle, search, filters, artifact panel, dashboard grid)
+- **External Libraries (CDN)** - Prism.js (syntax highlighting), Chart.js (charts), Marked.js (markdown), Gridstack.js (drag-drop grid)
 - **Static Files** - Can be served directly via any web server or opened in browser
 
-### File Structure (Updated 2025-10-24)
+### File Structure (Updated 2025-10-26)
 ```
 redesign-ai-studio/
 ├── README.md                         # Main documentation with quick start guide
@@ -24,15 +24,17 @@ redesign-ai-studio/
 ├── index.html                        # Landing page with navigation
 │
 ├── pages/                            # HTML pages
-│   ├── agents.html                   # Main dashboard with agent grid/list view
+│   ├── dashboard.html                # Dashboard with pinned charts (Gridstack)
+│   ├── agents.html                   # AI Agents grid/list view
 │   └── detail-chat.html              # Chat interface with artifact display panel
 │
 ├── assets/                           # All static assets
 │   ├── css/
-│   │   └── styles.css                # Comprehensive stylesheet (~45KB, 1300+ lines)
+│   │   └── styles.css                # Comprehensive stylesheet (~100KB, 2895 lines)
 │   ├── js/
-│   │   ├── app.js                    # Main JavaScript logic (~18KB)
-│   │   └── artifact-manager.js       # Artifact panel functionality (~10KB)
+│   │   ├── app.js                    # Main JavaScript logic (~30KB, 766 lines)
+│   │   ├── artifact-manager.js       # Artifact panel functionality (~15KB, 373 lines)
+│   │   └── dashboard.js              # Dashboard grid logic (~35KB, 872 lines)
 │   └── icons/
 │       └── icons.svg                 # SVG icon library
 │
@@ -44,16 +46,21 @@ redesign-ai-studio/
     ├── TESTING.md                    # Manual testing checklist
     ├── screenshots/                  # Page screenshots for documentation
     └── plans/                        # Design & implementation plans
+        ├── 2025-10-24-artifact-display-design.md
+        ├── 2025-10-24-artifact-display-implementation.md
+        └── 2025-10-26-dashboard-pinned-charts-design.md
 ```
 
 **Core Pages:**
-- `index.html` - Landing page with links to dashboard and chat interface
+- `index.html` - Landing page with links to all main pages (dashboard, agents, chat)
+- `pages/dashboard.html` - Dashboard with pinned chart visualizations (Gridstack.js drag-drop grid)
 - `pages/agents.html` - AI Agents Dashboard with filtering, search, agent cards
 - `pages/detail-chat.html` - Chat interface with artifact display panel (code/document/chart)
 
 **Key JavaScript Files:**
-- `assets/js/app.js` - Sidebar loading, search, filters, user menu, agent card generation
+- `assets/js/app.js` - Sidebar loading, search, filters, user menu, agent card generation, pin modal
 - `assets/js/artifact-manager.js` - Artifact panel (slide-in panel, syntax highlighting, copy-to-clipboard)
+- `assets/js/dashboard.js` - Dashboard grid management (Gridstack integration, chart rendering, state persistence)
 
 ### Design System
 
@@ -207,7 +214,7 @@ php -S localhost:8000
 - **No Build Step:** Changes visible immediately on page refresh
 
 **3. JavaScript Implementation**
-- **Main Logic:** `assets/js/app.js` (~18KB, 566 lines)
+- **Main Logic:** `assets/js/app.js` (~30KB, 766 lines)
   - **Sidebar Management:**
     - `loadSidebar(activePage)` - Fetches and loads sidebar component
     - `toggleSidebar()` - Sidebar collapse/expand
@@ -229,9 +236,14 @@ php -S localhost:8000
   - **Resizable Split-Pane:**
     - `initializeResizeHandler()` - Setup resizable divider between chat and artifact panel
     - `startResize(e)`, `doResize(e)`, `stopResize()` - Mouse drag handlers for resize
+  - **Pin Chart Modal:**
+    - `showPinModal(artifactId)` - Display pin modal for chart artifacts
+    - `closePinModal()` - Close pin modal
+    - `confirmPinChart()` - Save chart to sessionStorage and show toast
+    - `showToast(message, type)` - Toast notification system
   - Search and filter functionality (UI-only, no backend)
 
-- **Artifact Panel:** `assets/js/artifact-manager.js` (~10KB, 374 lines)
+- **Artifact Panel:** `assets/js/artifact-manager.js` (~15KB, 373 lines)
   - **Artifact Store Object:**
     - `ArtifactStore.add(artifact)` - Add artifact to store
     - `ArtifactStore.get(id)` - Retrieve artifact by ID
@@ -252,6 +264,34 @@ php -S localhost:8000
     - `getArtifactIcon(type)` - Return SVG icon for artifact type
     - `getArtifactMeta(artifact)` - Get metadata string (language, word count, chart type)
   - **Sample Artifacts:** 3 hardcoded artifacts (financial report, Python script, revenue chart)
+
+- **Dashboard Grid:** `assets/js/dashboard.js` (~35KB, 872 lines)
+  - **Initialization:**
+    - `initDashboard()` - Main dashboard initialization
+    - `initializeGridstack()` - Configure Gridstack.js (12-column grid, drag/drop, resize)
+    - `loadPinnedCharts()` - Load charts from sessionStorage
+    - `initResizeHandler()` - Window resize handler for responsive charts
+  - **Rendering:**
+    - `renderPinnedCharts(charts)` - Render all pinned charts to grid
+    - `createChartCard(chartData)` - Generate HTML for single chart card
+    - `initializeChartCanvas(chartId, config)` - Initialize Chart.js instance
+    - `showEmptyState()` / `hideEmptyState()` - Toggle empty state display
+  - **State Management:**
+    - `savePinnedCharts()` - Persist charts to sessionStorage
+    - `addPinnedChart(chartData)` - Add new chart to state
+    - `removePinnedChart(chartId)` - Remove chart from state
+    - `updateChartPosition(chartId, position)` - Update grid position in storage
+  - **Interactions:**
+    - `expandChart(chartId)` - Open fullscreen chart modal
+    - `closeFullscreenModal()` - Close fullscreen view
+    - `removeChart(chartId)` - Show confirmation dialog
+    - `confirmRemoveChart()` - Execute chart removal
+    - `clearAllCharts()` - Remove all charts with confirmation
+    - `loadPreviewDashboard()` - Load sample dashboard for preview
+  - **Gridstack Event Handlers:**
+    - Grid change events → auto-save positions
+    - Resize events → re-render Chart.js canvases
+    - Drag events → update grid layout
 
 #### Adding New Features
 
@@ -537,6 +577,17 @@ The project includes a comprehensive SVG icon library in `assets/icons/icons.svg
 - ✅ Responsive layout adjustments
 - ✅ Hover states and visual feedback
 - ✅ Static content display
+- ✅ **Dashboard with pinned charts (Gridstack.js integration)**
+- ✅ **Pin chart from chat to dashboard (modal + sessionStorage)**
+- ✅ **Drag-and-drop chart repositioning on dashboard**
+- ✅ **Resize charts via corner/edge handles**
+- ✅ **Fullscreen chart modal for detailed viewing**
+- ✅ **Remove charts with confirmation dialog**
+- ✅ **Clear all charts functionality**
+- ✅ **Auto-layout button for grid organization**
+- ✅ **sessionStorage persistence (browser session only)**
+- ✅ **Empty state with preview dashboard option**
+- ✅ **Toast notifications for user feedback**
 
 **What's UI-Only (Not Functional):**
 - ❌ Search bar (no search logic)
@@ -801,20 +852,28 @@ renderArtifact(artifact);
 
 | What to Edit | File | Line Range |
 |-------------|------|---------------------|
+| **Page Content:** | | |
+| Dashboard page | `pages/dashboard.html` | Full file (242 lines) |
+| Agents page | `pages/agents.html` | Full file (~350 lines) |
+| Chat page | `pages/detail-chat.html` | Full file (~900 lines) |
+| Landing page | `index.html` | Full file (274 lines) |
+| **JavaScript Logic:** | | |
 | Agent cards data | `assets/js/app.js` | Lines 16-57 (agentsData array) |
-| Sidebar component | `components/sidebar.html` | Full file (36 lines) |
-| Chat messages | `pages/detail-chat.html` | Lines 120-400 (approx) |
-| Artifact panel logic | `assets/js/artifact-manager.js` | Full file (374 lines) |
-| **CSS Architecture:** |
-| CSS Variables/Design Tokens | `assets/css/styles.css` | Lines 8-51 |
-| Base Styles | `assets/css/styles.css` | Lines 53-58 |
+| Dashboard grid logic | `assets/js/dashboard.js` | Full file (872 lines) |
+| Artifact panel logic | `assets/js/artifact-manager.js` | Full file (373 lines) |
+| Core app functions | `assets/js/app.js` | Full file (766 lines) |
+| **Components:** | | |
+| Sidebar navigation | `components/sidebar.html` | Full file (36 lines) |
+| **CSS Architecture:** | | |
+| CSS Variables/Design Tokens | `assets/css/styles.css` | Lines 1-50 |
 | Sidebar Styles | `assets/css/styles.css` | Lines 60-354 |
 | Unified Button System | `assets/css/styles.css` | Lines 390-622 |
 | Badges | `assets/css/styles.css` | Lines 623-662 |
 | Agents Page Styles | `assets/css/styles.css` | Lines 664-999 |
 | Chat Page Styles | `assets/css/styles.css` | Lines 1001-1617 |
-| Artifact Panel Styles | `assets/css/styles.css` | Lines 1645-1318 |
-| Responsive Styles | `assets/css/styles.css` | Lines 1619-1643 |
+| Artifact Panel Styles | `assets/css/styles.css` | Lines 1645-2000 |
+| Dashboard Styles | `assets/css/styles.css` | Lines 2000-2600 |
+| Responsive Styles | `assets/css/styles.css` | Lines 2600-2895 |
 
 ### Project Constraints
 
