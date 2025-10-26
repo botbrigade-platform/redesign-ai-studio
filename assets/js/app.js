@@ -49,9 +49,8 @@ async function loadSidebar(activePage = 'agents') {
         // Set active navigation item
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
-            const href = item.getAttribute('href');
-            if ((activePage === 'agents' && href === 'agents.html') ||
-                (activePage === 'chat' && href === 'detail-chat.html')) {
+            const dataPage = item.getAttribute('data-page');
+            if (dataPage === activePage) {
                 item.classList.add('active');
             }
         });
@@ -376,6 +375,17 @@ function renderArtifact(artifact) {
       initializeChart(artifact);
     }, 50);
   }
+
+  // Show/hide pin button based on artifact type
+  const pinBtn = document.getElementById('pin-artifact-btn');
+  if (pinBtn) {
+    if (artifact.type === 'chart') {
+      pinBtn.style.display = '';
+      pinBtn.onclick = () => showPinModal(artifact.id);
+    } else {
+      pinBtn.style.display = 'none';
+    }
+  }
 }
 
 // ============================================
@@ -563,3 +573,194 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 });
+
+// ===== Pin Chart to Dashboard Functionality =====
+
+let currentPinArtifactId = null;
+
+/**
+ * Show pin modal for a chart artifact
+ */
+function showPinModal(artifactId) {
+  if (!artifactId || !window.ArtifactStore) {
+    console.error('Invalid artifact ID or ArtifactStore not available');
+    return;
+  }
+
+  const artifact = window.ArtifactStore.get(artifactId);
+  if (!artifact || artifact.type !== 'chart') {
+    console.error('Artifact not found or not a chart');
+    return;
+  }
+
+  currentPinArtifactId = artifactId;
+
+  // Create modal if it doesn't exist
+  let modal = document.getElementById('pinModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'pinModal';
+    modal.className = 'pin-modal';
+    modal.innerHTML = `
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Pin Chart to Dashboard</h3>
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="closePinModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Chart Name</label>
+          <input type="text" class="form-input" id="chartNameInput"
+                 placeholder="Enter a name for this chart..." maxlength="50">
+          <span class="form-hint">Max 50 characters</span>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-md" onclick="closePinModal()">Cancel</button>
+          <button class="btn btn-primary btn-md" onclick="confirmPinChart()">Save</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Add ESC key listener
+    document.addEventListener('keydown', handlePinModalEscape);
+
+    // Add backdrop click listener
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closePinModal();
+      }
+    });
+
+    // Add Enter key submit
+    const input = document.getElementById('chartNameInput');
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        confirmPinChart();
+      }
+    });
+  }
+
+  // Pre-fill with artifact title
+  document.getElementById('chartNameInput').value = artifact.title;
+
+  // Show modal
+  modal.classList.add('open');
+
+  // Focus input
+  setTimeout(function() {
+    document.getElementById('chartNameInput').focus();
+    document.getElementById('chartNameInput').select();
+  }, 100);
+}
+
+/**
+ * Close pin modal
+ */
+function closePinModal() {
+  const modal = document.getElementById('pinModal');
+  if (modal) {
+    modal.classList.remove('open');
+  }
+  currentPinArtifactId = null;
+}
+
+/**
+ * Handle ESC key for pin modal
+ */
+function handlePinModalEscape(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('pinModal');
+    if (modal && modal.classList.contains('open')) {
+      closePinModal();
+    }
+  }
+}
+
+/**
+ * Confirm and save pinned chart
+ */
+function confirmPinChart() {
+  if (!currentPinArtifactId) return;
+
+  const chartName = document.getElementById('chartNameInput').value.trim();
+  if (!chartName) {
+    showToast('Please enter a chart name', 'error');
+    return;
+  }
+
+  const artifact = window.ArtifactStore.get(currentPinArtifactId);
+  if (!artifact) {
+    console.error('Artifact not found');
+    return;
+  }
+
+  // Parse chart config from artifact content
+  const chartConfig = JSON.parse(artifact.content);
+
+  // Create pinned chart object
+  const pinnedChart = {
+    id: 'chart-' + Date.now(),
+    artifactId: artifact.id,
+    name: chartName,
+    type: 'chart',
+    chartConfig: chartConfig,
+    chartType: artifact.metadata.chartType,
+    pinnedAt: new Date().toISOString(),
+    gridPosition: {
+      x: 0,  // Auto-position by Gridstack
+      y: 0,
+      w: 2,  // Default size: 2 columns x 2 rows
+      h: 2
+    }
+  };
+
+  // Load existing pinned charts
+  const pinnedCharts = JSON.parse(sessionStorage.getItem('pinnedCharts') || '[]');
+
+  // Add new chart
+  pinnedCharts.push(pinnedChart);
+
+  // Save to sessionStorage
+  sessionStorage.setItem('pinnedCharts', JSON.stringify(pinnedCharts));
+
+  // Close modal
+  closePinModal();
+
+  // Show success toast
+  showToast('Chart pinned to Dashboard', 'success');
+}
+
+/**
+ * Show toast notification
+ */
+function showToast(message, type) {
+  // Create toast if it doesn't exist
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.className = 'toast';
+    toast.innerHTML = '<span id="toastMessage"></span>';
+    document.body.appendChild(toast);
+  }
+
+  const toastMessage = document.getElementById('toastMessage');
+  toastMessage.textContent = message;
+  toast.className = 'toast ' + (type || 'info');
+  toast.classList.add('show');
+
+  setTimeout(function() {
+    toast.classList.remove('show');
+  }, 3000);
+}
+
+// Export functions for global use
+window.showPinModal = showPinModal;
+window.closePinModal = closePinModal;
+window.confirmPinChart = confirmPinChart;
+window.showToast = showToast;
