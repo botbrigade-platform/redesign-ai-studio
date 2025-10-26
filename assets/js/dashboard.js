@@ -6,6 +6,7 @@
 let grid = null;
 let fullscreenChart = null;
 let pendingRemoveChartId = null;
+let chartInstances = {}; // Store chart instances by canvas ID for resize handling
 
 // Initialize dashboard on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize dashboard
   initDashboard();
+
+  // Add window resize handler
+  initResizeHandler();
 });
 
 /**
@@ -41,10 +45,10 @@ function initializeGridstack() {
   gridEl.style.display = 'block';
 
   grid = GridStack.init({
-    column: 6,
+    column: 12,  // 12 columns for standard responsive grid layout
     cellHeight: 120,
     margin: 16,
-    float: false,
+    float: true,  // Enable auto-compact to eliminate empty spaces
     resizable: {
       handles: 'e, se, s, sw, w'
     },
@@ -67,6 +71,41 @@ function initializeGridstack() {
         });
       });
     }
+  });
+}
+
+/**
+ * Initialize window resize handler
+ * Fixes issue where charts don't resize properly when transitioning mobile <-> desktop
+ */
+function initResizeHandler() {
+  let resizeTimeout = null;
+  let previousWidth = window.innerWidth;
+
+  window.addEventListener('resize', function() {
+    // Clear previous timeout
+    if (resizeTimeout) {
+      clearTimeout(resizeTimeout);
+    }
+
+    // Debounce resize events (250ms)
+    resizeTimeout = setTimeout(function() {
+      const currentWidth = window.innerWidth;
+
+      // Only process if width actually changed (ignore mobile browser address bar changes)
+      if (Math.abs(currentWidth - previousWidth) > 50) {
+        // Force all Chart.js instances to resize
+        Object.keys(chartInstances).forEach(function(chartId) {
+          const chart = chartInstances[chartId];
+          if (chart) {
+            chart.resize();
+          }
+        });
+
+        // Update previous width
+        previousWidth = currentWidth;
+      }
+    }, 250);
   });
 }
 
@@ -97,9 +136,9 @@ function renderPinnedCharts(charts) {
       y: chartData.gridPosition.y,
       w: chartData.gridPosition.w,
       h: chartData.gridPosition.h,
-      minW: 1,
+      minW: 2,
       minH: 1,
-      maxW: 6,
+      maxW: 12,
       maxH: 4
     });
 
@@ -162,7 +201,10 @@ function initializeChartCanvas(chartId, config) {
   }
 
   const ctx = canvas.getContext('2d');
-  new Chart(ctx, config);
+  const chart = new Chart(ctx, config);
+
+  // Store chart instance for resize handling
+  chartInstances[chartId] = chart;
 }
 
 /**
@@ -285,6 +327,12 @@ function confirmRemoveChart() {
   // Remove from array
   const filteredCharts = charts.filter(function(c) { return c.id !== chartId; });
   savePinnedCharts(filteredCharts);
+
+  // Destroy chart instance if exists
+  if (chartInstances[chartId]) {
+    chartInstances[chartId].destroy();
+    delete chartInstances[chartId];
+  }
 
   // Remove from grid
   grid.removeWidget(`[gs-id="${chartId}"]`);
@@ -422,21 +470,21 @@ function loadPreviewDashboard() {
 }
 
 /**
- * Generate 10 sample charts with different types and sizes
+ * Generate 12 sample charts with different types and dynamic sizes
  */
 function generatePreviewCharts() {
   const charts = [];
   const now = Date.now();
 
-  // Chart 1: Line Chart - Revenue Trend (2x2)
+  // Chart 1: Line Chart - Revenue Trend (4x2 - compact)
   charts.push({
     id: 'preview-chart-1',
     artifactId: 'preview-artifact-1',
     name: 'Revenue Trend Q1-Q4 2024',
     type: 'chart',
     chartType: 'line',
-    pinnedAt: new Date(now - 9000).toISOString(),
-    gridPosition: { x: 0, y: 0, w: 2, h: 2 },
+    pinnedAt: new Date(now - 11000).toISOString(),
+    gridPosition: { x: 0, y: 0, w: 4, h: 2 },  // Row 1, Col 1-4
     chartConfig: {
       type: 'line',
       data: {
@@ -452,21 +500,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'top' } }
       }
     }
   });
 
-  // Chart 2: Bar Chart - Sector Performance (3x2)
+  // Chart 2: Bar Chart - Sector Performance (4x2)
   charts.push({
     id: 'preview-chart-2',
     artifactId: 'preview-artifact-2',
     name: 'Sector Performance Comparison',
     type: 'chart',
     chartType: 'bar',
-    pinnedAt: new Date(now - 8000).toISOString(),
-    gridPosition: { x: 2, y: 0, w: 3, h: 2 },
+    pinnedAt: new Date(now - 10000).toISOString(),
+    gridPosition: { x: 4, y: 0, w: 4, h: 2 },  // Row 1, Col 5-8
     chartConfig: {
       type: 'bar',
       data: {
@@ -481,21 +529,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } }
       }
     }
   });
 
-  // Chart 3: Pie Chart - Market Share (1x2)
+  // Chart 3: Pie Chart - Market Share (4x4 - needs height for legend)
   charts.push({
     id: 'preview-chart-3',
     artifactId: 'preview-artifact-3',
     name: 'Market Share Distribution',
     type: 'chart',
     chartType: 'pie',
-    pinnedAt: new Date(now - 7000).toISOString(),
-    gridPosition: { x: 5, y: 0, w: 1, h: 2 },
+    pinnedAt: new Date(now - 9000).toISOString(),
+    gridPosition: { x: 8, y: 0, w: 4, h: 4 },  // Row 1, Col 9-12 (tall)
     chartConfig: {
       type: 'pie',
       data: {
@@ -514,21 +562,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom' } }
       }
     }
   });
 
-  // Chart 4: Doughnut Chart - Budget Allocation (2x2)
+  // Chart 4: Doughnut Chart - Budget Allocation (4x2)
   charts.push({
     id: 'preview-chart-4',
     artifactId: 'preview-artifact-4',
     name: 'Budget Allocation 2024',
     type: 'chart',
     chartType: 'doughnut',
-    pinnedAt: new Date(now - 6000).toISOString(),
-    gridPosition: { x: 0, y: 2, w: 2, h: 2 },
+    pinnedAt: new Date(now - 8000).toISOString(),
+    gridPosition: { x: 0, y: 2, w: 4, h: 2 },  // Row 2, Col 1-4
     chartConfig: {
       type: 'doughnut',
       data: {
@@ -546,21 +594,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'right' } }
       }
     }
   });
 
-  // Chart 5: Bar Chart - Monthly Growth (2x2)
+  // Chart 5: Bar Chart - Monthly Growth (4x2)
   charts.push({
     id: 'preview-chart-5',
     artifactId: 'preview-artifact-5',
     name: 'Monthly User Growth',
     type: 'chart',
     chartType: 'bar',
-    pinnedAt: new Date(now - 5000).toISOString(),
-    gridPosition: { x: 2, y: 2, w: 2, h: 2 },
+    pinnedAt: new Date(now - 7000).toISOString(),
+    gridPosition: { x: 4, y: 2, w: 4, h: 2 },  // Row 2, Col 5-8
     chartConfig: {
       type: 'bar',
       data: {
@@ -575,21 +623,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } }
       }
     }
   });
 
-  // Chart 6: Line Chart - Customer Satisfaction (2x2)
+  // Chart 6: Line Chart - Customer Satisfaction (6x3)
   charts.push({
     id: 'preview-chart-6',
     artifactId: 'preview-artifact-6',
     name: 'Customer Satisfaction Score',
     type: 'chart',
     chartType: 'line',
-    pinnedAt: new Date(now - 4000).toISOString(),
-    gridPosition: { x: 4, y: 2, w: 2, h: 2 },
+    pinnedAt: new Date(now - 6000).toISOString(),
+    gridPosition: { x: 0, y: 4, w: 6, h: 3 },  // Row 3, Col 1-6 (wider)
     chartConfig: {
       type: 'line',
       data: {
@@ -606,21 +654,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         scales: { y: { min: 80, max: 100 } }
       }
     }
   });
 
-  // Chart 7: Bar Chart - Team Performance (3x2)
+  // Chart 7: Bar Chart - Team Performance (6x3)
   charts.push({
     id: 'preview-chart-7',
     artifactId: 'preview-artifact-7',
     name: 'Team Performance Metrics',
     type: 'chart',
     chartType: 'bar',
-    pinnedAt: new Date(now - 3000).toISOString(),
-    gridPosition: { x: 0, y: 4, w: 3, h: 2 },
+    pinnedAt: new Date(now - 5000).toISOString(),
+    gridPosition: { x: 6, y: 4, w: 6, h: 3 },  // Row 3, Col 7-12 (wider)
     chartConfig: {
       type: 'bar',
       data: {
@@ -641,21 +689,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'top' } }
       }
     }
   });
 
-  // Chart 8: Pie Chart - Traffic Sources (2x2)
+  // Chart 8: Pie Chart - Traffic Sources (4x3 - needs height for legend)
   charts.push({
     id: 'preview-chart-8',
     artifactId: 'preview-artifact-8',
     name: 'Traffic Sources',
     type: 'chart',
     chartType: 'pie',
-    pinnedAt: new Date(now - 2000).toISOString(),
-    gridPosition: { x: 3, y: 4, w: 2, h: 2 },
+    pinnedAt: new Date(now - 4000).toISOString(),
+    gridPosition: { x: 0, y: 7, w: 4, h: 3 },  // Row 4, Col 1-4
     chartConfig: {
       type: 'pie',
       data: {
@@ -674,21 +722,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom' } }
       }
     }
   });
 
-  // Chart 9: Line Chart - Server Response Time (1x2)
+  // Chart 9: Line Chart - Server Response Time (4x3)
   charts.push({
     id: 'preview-chart-9',
     artifactId: 'preview-artifact-9',
     name: 'Server Response Time',
     type: 'chart',
     chartType: 'line',
-    pinnedAt: new Date(now - 1000).toISOString(),
-    gridPosition: { x: 5, y: 4, w: 1, h: 2 },
+    pinnedAt: new Date(now - 3000).toISOString(),
+    gridPosition: { x: 4, y: 7, w: 4, h: 3 },  // Row 4, Col 5-8
     chartConfig: {
       type: 'line',
       data: {
@@ -704,21 +752,21 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false } }
       }
     }
   });
 
-  // Chart 10: Bar Chart - Quarterly Comparison (6x2 - full width)
+  // Chart 10: Bar Chart - Quarterly Comparison (4x2)
   charts.push({
     id: 'preview-chart-10',
     artifactId: 'preview-artifact-10',
     name: 'Quarterly Revenue Comparison (2023 vs 2024)',
     type: 'chart',
     chartType: 'bar',
-    pinnedAt: new Date(now).toISOString(),
-    gridPosition: { x: 0, y: 6, w: 6, h: 2 },
+    pinnedAt: new Date(now - 2000).toISOString(),
+    gridPosition: { x: 8, y: 7, w: 4, h: 2 },  // Row 4, Col 9-12
     chartConfig: {
       type: 'bar',
       data: {
@@ -739,11 +787,73 @@ function generatePreviewCharts() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { position: 'top' },
           title: { display: false }
         }
+      }
+    }
+  });
+
+  // Chart 11: Line Chart - API Response Times (8x2 - wider for more data points)
+  charts.push({
+    id: 'preview-chart-11',
+    artifactId: 'preview-artifact-11',
+    name: 'API Response Times (Last 24h)',
+    type: 'chart',
+    chartType: 'line',
+    pinnedAt: new Date(now - 1000).toISOString(),
+    gridPosition: { x: 0, y: 10, w: 8, h: 2 },  // Row 5, Col 1-8 (wide)
+    chartConfig: {
+      type: 'line',
+      data: {
+        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+        datasets: [{
+          label: 'Average (ms)',
+          data: [145, 138, 152, 168, 175, 159, 142],
+          borderColor: '#072ac8',
+          backgroundColor: 'rgba(7, 42, 200, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top' } }
+      }
+    }
+  });
+
+  // Chart 12: Doughnut Chart - Device Types (4x3 - tall for legend)
+  charts.push({
+    id: 'preview-chart-12',
+    artifactId: 'preview-artifact-12',
+    name: 'Device Type Distribution',
+    type: 'chart',
+    chartType: 'doughnut',
+    pinnedAt: new Date(now).toISOString(),
+    gridPosition: { x: 8, y: 9, w: 4, h: 3 },  // Row 5, Col 9-12
+    chartConfig: {
+      type: 'doughnut',
+      data: {
+        labels: ['Desktop', 'Mobile', 'Tablet'],
+        datasets: [{
+          data: [58, 35, 7],
+          backgroundColor: [
+            '#072ac8',
+            '#ffc600',
+            '#00A651'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } }
       }
     }
   });
