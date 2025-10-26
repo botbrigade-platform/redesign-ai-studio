@@ -163,7 +163,7 @@ function createAgentCard(agent) {
 
     const toolsBadge = agent.tools > 0 ? `
         <span class="badge tools">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="#tool-icon"/>
             </svg>
             ${agent.tools} Tools
@@ -177,7 +177,7 @@ function createAgentCard(agent) {
                     <h3 class="agent-name">${agent.name}</h3>
                 </div>
                 <button class="menu-btn">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <use href="#menu-dots"/>
                     </svg>
                 </button>
@@ -207,20 +207,20 @@ function createAgentCard(agent) {
             </div>
 
             <div class="card-actions">
-                <a href="detail-chat.html" class="btn btn-chat">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a href="detail-chat.html" class="btn btn-primary btn-md">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <use href="#chat-icon"/>
                     </svg>
                     Chat
                 </a>
-                <button class="btn btn-secondary">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn btn-secondary btn-md">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <use href="#eye-icon"/>
                     </svg>
                     View
                 </button>
-                <button class="btn btn-secondary">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn btn-secondary btn-md">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <use href="#edit-icon"/>
                     </svg>
                     Edit

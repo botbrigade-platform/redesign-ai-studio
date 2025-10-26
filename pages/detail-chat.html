@@ -157,6 +157,15 @@
             <line x1="18" y1="6" x2="6" y2="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <line x1="6" y1="6" x2="18" y2="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </symbol>
+
+        <!-- Share Icon -->
+        <symbol id="share-icon" viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="18" cy="19" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
     </svg>
 
     <div class="sidebar" id="sidebar-container">
@@ -172,20 +181,20 @@
                     <span>Public Data Insight Agent</span>
                 </div>
                 <div class="header-actions">
-                    <button class="new-chat-btn">
+                    <button class="btn btn-ghost btn-md new-chat-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <use href="#plus-icon"/>
                         </svg>
                         <span>New Chat</span>
                     </button>
-                    <button class="show-artifact-btn" id="show-artifact-btn" title="Show Artifact">
+                    <button class="btn btn-ghost btn-md btn-icon share-btn" title="Share">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <use href="#eye-icon"/>
+                            <use href="#share-icon"/>
                         </svg>
                     </button>
-                    <button class="options-btn">
+                    <button class="btn btn-ghost btn-md btn-icon show-artifact-btn" id="show-artifact-btn" title="Show Artifact">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <use href="../assets/icons/icons.svg#menu-dots"/>
+                            <use href="#eye-icon"/>
                         </svg>
                     </button>
                 </div>
@@ -250,7 +259,7 @@
                             </ol>
                         </div>
                         <div class="message-actions">
-                            <button class="message-action-btn">
+                            <button class="btn btn-ghost btn-sm message-action-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <use href="../assets/icons/icons.svg#copy-icon"/>
                                 </svg>
@@ -410,11 +419,11 @@
                                 <span class="thumbnail-title">Financial Analysis Report Q3 2024</span>
                                 <span class="thumbnail-meta">Document • 1,240 words</span>
                             </div>
-                            <button class="thumbnail-open-btn">Open</button>
+                            <button class="btn btn-sm thumbnail-open-btn">Open</button>
                         </div>
 
                         <div class="message-actions">
-                            <button class="message-action-btn">
+                            <button class="btn btn-ghost btn-sm message-action-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <use href="../assets/icons/icons.svg#copy-icon"/>
                                 </svg>
@@ -455,11 +464,11 @@
                                 <span class="thumbnail-title">Python Data Analysis Script</span>
                                 <span class="thumbnail-meta">Python • 45 lines</span>
                             </div>
-                            <button class="thumbnail-open-btn">Open</button>
+                            <button class="btn btn-sm thumbnail-open-btn">Open</button>
                         </div>
 
                         <div class="message-actions">
-                            <button class="message-action-btn">
+                            <button class="btn btn-ghost btn-sm message-action-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <use href="../assets/icons/icons.svg#copy-icon"/>
                                 </svg>
@@ -495,11 +504,11 @@
                                 <span class="thumbnail-title">Revenue Growth Q3 2024</span>
                                 <span class="thumbnail-meta">Bar chart</span>
                             </div>
-                            <button class="thumbnail-open-btn">Open</button>
+                            <button class="btn btn-sm thumbnail-open-btn">Open</button>
                         </div>
 
                         <div class="message-actions">
-                            <button class="message-action-btn">
+                            <button class="btn btn-ghost btn-sm message-action-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <use href="../assets/icons/icons.svg#copy-icon"/>
                                 </svg>
@@ -518,7 +527,7 @@
                         <use href="../assets/icons/icons.svg#file-icon"/>
                     </svg>
                     <span>laporan-keuangan.pdf</span>
-                    <button class="file-remove-btn">
+                    <button class="btn btn-xs btn-icon file-remove-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <use href="../assets/icons/icons.svg#x-icon"/>
                         </svg>
@@ -529,7 +538,7 @@
                         <use href="../assets/icons/icons.svg#image-icon"/>
                     </svg>
                     <span>data-visualization.png</span>
-                    <button class="file-remove-btn">
+                    <button class="btn btn-xs btn-icon file-remove-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <use href="../assets/icons/icons.svg#x-icon"/>
                         </svg>
@@ -541,13 +550,13 @@
                 <div class="input-group">
                     <textarea placeholder="Type your message..."></textarea>
                     <div class="input-actions">
-                        <button class="attach-file-btn">
+                        <button class="btn btn-sm attach-file-btn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <use href="../assets/icons/icons.svg#attach-icon"/>
                             </svg>
                             Attach Files
                         </button>
-                        <button class="send-btn">
+                        <button class="btn btn-primary btn-icon send-btn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <use href="../assets/icons/icons.svg#send-icon"/>
                             </svg>
@@ -567,7 +576,7 @@
         <div class="artifact-panel" id="artifact-panel">
             <div class="artifact-panel-header">
                 <div class="header-left">
-                    <button class="artifact-list-btn" id="artifact-list-btn">
+                    <button class="btn btn-secondary btn-md artifact-list-btn" id="artifact-list-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="8" y1="6" x2="21" y2="6"></line>
                             <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -580,13 +589,13 @@
                     </button>
                 </div>
                 <div class="header-right">
-                    <button class="copy-artifact-btn" id="copy-artifact-btn" title="Copy content">
+                    <button class="btn btn-ghost btn-md btn-icon copy-artifact-btn" id="copy-artifact-btn" title="Copy content">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
                     </button>
-                    <button class="close-panel-btn" id="close-panel-btn" title="Close">
+                    <button class="btn btn-ghost btn-md btn-icon close-panel-btn" id="close-panel-btn" title="Close">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>

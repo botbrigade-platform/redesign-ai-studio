@@ -25,6 +25,29 @@
     --text-secondary: #6b7280;
     --success-green: #00A651;
     --success-green-light: #e6f7ef;
+
+    /* Button Design Tokens */
+    --btn-height-lg: 40px;
+    --btn-height-md: 32px;
+    --btn-height-sm: 28px;
+    --btn-height-xs: 20px;
+    --btn-padding-lg: 0 20px;
+    --btn-padding-md: 0 16px;
+    --btn-padding-sm: 0 12px;
+    --btn-padding-xs: 0 8px;
+    --btn-gap: 8px;
+    --btn-gap-sm: 6px;
+    --btn-icon-size-lg: 20px;
+    --btn-icon-size-md: 18px;
+    --btn-icon-size-sm: 16px;
+    --btn-icon-size-xs: 14px;
+    --btn-radius: 8px;
+    --btn-radius-sm: 6px;
+    --btn-transition: all 0.2s ease;
+    --btn-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --btn-shadow-hover: 0 2px 6px rgba(7, 42, 200, 0.15);
+    --btn-shadow-primary: 0 2px 8px rgba(7, 42, 200, 0.25);
+    --btn-shadow-primary-hover: 0 4px 12px rgba(7, 42, 200, 0.35);
 }
 
 body {
@@ -363,20 +386,52 @@ body {
     font-weight: 500;
 }
 
+/* ============================================
+   UNIFIED BUTTON SYSTEM
+   ============================================ */
+
+/* ===== BASE BUTTON CLASS ===== */
+.btn {
+    /* Layout */
+    height: var(--btn-height-md);
+    padding: var(--btn-padding-md);
+    border-radius: var(--btn-radius);
+
+    /* Typography */
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+
+    /* Display */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
+
+    /* Interaction */
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+
+    /* Transitions */
+    transition: var(--btn-transition);
+}
+
+.btn svg {
+    width: var(--btn-icon-size-sm);
+    height: var(--btn-icon-size-sm);
+    flex-shrink: 0;
+}
+
+/* ===== BUTTON VARIANTS ===== */
+
+/* Primary Variant - Filled Blue with Shimmer */
 .btn-primary {
     background: var(--primary-blue);
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(7, 42, 200, 0.25);
+    box-shadow: var(--btn-shadow-primary);
     position: relative;
     overflow: hidden;
 }
@@ -399,74 +454,160 @@ body {
 .btn-primary:hover {
     background: var(--primary-blue-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(7, 42, 200, 0.35);
+    box-shadow: var(--btn-shadow-primary-hover);
 }
 
-.btn {
-    flex: 1;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-decoration: none;
+.btn-primary:active {
+    transform: translateY(0);
 }
 
-.btn-chat {
-    background: var(--primary-blue);
-    color: white;
-    box-shadow: 0 2px 6px rgba(7, 42, 200, 0.25);
-    position: relative;
-    overflow: hidden;
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--neutral-light);
 }
 
-.btn-chat::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 198, 0, 0.2), transparent);
-    transition: left 0.5s;
+.btn-primary:disabled:hover {
+    transform: none;
+    box-shadow: var(--btn-shadow-primary);
 }
 
-.btn-chat:hover::before {
-    left: 100%;
-}
-
-.btn-chat:hover {
-    background: var(--primary-blue-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(7, 42, 200, 0.35);
-}
-
+/* Secondary Variant - Outlined */
 .btn-secondary {
     background: var(--background-white);
     color: var(--primary-blue);
     border: 1px solid var(--border-color);
+    box-shadow: var(--btn-shadow);
 }
 
 .btn-secondary:hover {
     background: var(--accent-blue-soft);
     border-color: var(--primary-blue);
     color: var(--primary-blue-dark);
+    box-shadow: var(--btn-shadow-hover);
 }
 
+.btn-secondary:active {
+    background: var(--accent-blue-soft);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Ghost Variant - Transparent with Hover */
+.btn-ghost {
+    background: transparent;
+    color: var(--neutral-light);
+    border: none;
+}
+
+.btn-ghost:hover {
+    background: var(--background-gray);
+    color: var(--primary-blue);
+}
+
+.btn-ghost:active {
+    background: var(--accent-blue-soft);
+}
+
+.btn-ghost.active {
+    background: var(--accent-blue-soft);
+    color: var(--primary-blue);
+}
+
+/* ===== BUTTON SIZES ===== */
+
+.btn-lg {
+    height: var(--btn-height-lg);
+    padding: var(--btn-padding-lg);
+    font-size: 14px;
+}
+
+.btn-lg svg {
+    width: var(--btn-icon-size-md);
+    height: var(--btn-icon-size-md);
+}
+
+.btn-md {
+    height: var(--btn-height-md);
+    padding: var(--btn-padding-md);
+    font-size: 14px;
+}
+
+.btn-md svg {
+    width: var(--btn-icon-size-sm);
+    height: var(--btn-icon-size-sm);
+}
+
+.btn-sm {
+    height: var(--btn-height-sm);
+    padding: var(--btn-padding-sm);
+    font-size: 13px;
+    gap: var(--btn-gap-sm);
+}
+
+.btn-sm svg {
+    width: var(--btn-icon-size-xs);
+    height: var(--btn-icon-size-xs);
+}
+
+.btn-xs {
+    height: var(--btn-height-xs);
+    padding: var(--btn-padding-xs);
+    font-size: 12px;
+    gap: var(--btn-gap-sm);
+    border-radius: var(--btn-radius-sm);
+}
+
+.btn-xs svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ===== BUTTON TYPES ===== */
+
+/* Icon-only Button - Square */
+.btn-icon {
+    width: var(--btn-height-md);
+    padding: 0;
+    gap: 0;
+}
+
+.btn-icon.btn-lg {
+    width: var(--btn-height-lg);
+}
+
+.btn-icon.btn-sm {
+    width: var(--btn-height-sm);
+}
+
+.btn-icon.btn-xs {
+    width: var(--btn-height-xs);
+}
+
+/* Text-only Button - No Icon */
+.btn-text {
+    gap: 0;
+}
+
+/* ===== SPECIALIZED BUTTONS ===== */
+
+/* Menu Button (three dots) */
 .menu-btn {
-    background: none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
     border: none;
     color: var(--neutral-light);
     cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
+    border-radius: var(--btn-radius-sm);
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .menu-btn:hover {
@@ -474,34 +615,9 @@ body {
     color: var(--primary-blue);
 }
 
-.icon-btn {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border-color);
-    background: var(--background-white);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-secondary);
-}
-
-.icon-btn:hover {
-    background: var(--accent-blue-soft);
-    border-color: var(--primary-blue);
-    color: var(--primary-blue);
-}
-
-.icon {
+.menu-btn svg {
     width: 16px;
     height: 16px;
-}
-
-.icon-lg {
-    width: 20px;
-    height: 20px;
 }
 
 .badge {
@@ -765,25 +881,7 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.view-btn {
-    padding: 6px 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    border-radius: 4px;
-    color: var(--text-secondary);
-    transition: all 0.2s;
-}
-
-.view-btn.active {
-    background: var(--background-white);
-    color: var(--primary-blue);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.view-btn:hover:not(.active) {
-    color: var(--primary-blue);
-}
+/* view-btn styles moved to unified ghost buttons section */
 
 .agents-grid {
     display: grid;
@@ -817,18 +915,19 @@ body {
     border-color: var(--border-color);
 }
 
-.agent-card:has(.status-inactive) .btn-chat {
+.agent-card:has(.status-inactive) .btn-primary {
     background: var(--neutral-medium);
     cursor: not-allowed;
+    pointer-events: none;
 }
 
-.agent-card:has(.status-inactive) .btn-chat:hover {
+.agent-card:has(.status-inactive) .btn-primary:hover {
     background: var(--neutral-medium);
     transform: none;
     box-shadow: 0 2px 6px rgba(75, 85, 99, 0.25);
 }
 
-.agent-card:has(.status-inactive) .btn-chat::before {
+.agent-card:has(.status-inactive) .btn-primary::before {
     display: none;
 }
 
@@ -959,89 +1058,139 @@ body:has(.chat-messages) .page-header::after {
     gap: 8px;
 }
 
-.new-chat-btn {
-    height: 32px;
-    padding: 0 12px;
-    border: 1px solid var(--primary-blue);
+/* Specialized Button Styles for Specific Use Cases */
+
+/* Share & Show Artifact buttons - Icon-only ghost buttons in header */
+.share-btn,
+.show-artifact-btn {
     background: var(--background-white);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.share-btn:hover,
+.show-artifact-btn:hover {
+    background: var(--background-gray);
     color: var(--primary-blue);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transform: scale(1.05);
+    box-shadow: var(--btn-shadow);
+}
+
+/* New Chat Button - Ghost button with label */
+.new-chat-btn {
+    background: var(--background-white);
+    color: var(--text-secondary);
+    border: 1px solid transparent;
 }
 
 .new-chat-btn:hover {
-    background: var(--accent-blue-soft);
-    border-color: var(--primary-blue-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(7, 42, 200, 0.15);
+    background: var(--background-gray);
+    color: var(--primary-blue);
+    transform: scale(1.05);
+    box-shadow: var(--btn-shadow);
 }
 
-.new-chat-btn svg {
-    width: 16px;
-    height: 16px;
+/* Message Action Buttons (Copy, etc.) */
+.message-action-btn {
+    font-weight: 400;
 }
 
-.options-btn {
-    width: 32px;
-    height: 32px;
+/* View Toggle Buttons */
+.view-btn {
+    /* Inherits from .btn.btn-ghost.btn-sm.btn-icon */
+}
+
+/* Artifact Panel Buttons */
+.copy-artifact-btn,
+.close-panel-btn {
+    /* Inherits from .btn.btn-ghost.btn-icon.btn-md */
+}
+
+.copy-artifact-btn.copied {
+    background: var(--success-green-light) !important;
+    border-color: var(--success-green) !important;
+    color: var(--success-green) !important;
+}
+
+.copy-artifact-btn.copied svg {
+    animation: checkmark 0.3s ease;
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Thumbnail Open Button */
+.thumbnail-open-btn {
+    background: var(--background-white);
     border: 1px solid var(--border-color);
-    background: var(--background-white);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    color: var(--primary-blue);
 }
 
-.options-btn:hover {
-    background: var(--accent-blue-soft);
-    color: var(--primary-blue);
+.thumbnail-open-btn:hover {
+    background: var(--primary-blue);
+    color: white;
     border-color: var(--primary-blue);
-    transform: scale(1.05);
 }
 
-.options-btn svg {
-    width: 18px;
-    height: 18px;
+/* Attach File Button */
+.attach-file-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
 }
 
-.show-artifact-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--primary-blue);
+.attach-file-btn:hover {
     background: var(--background-white);
-    border-radius: 8px;
-    display: flex;
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+/* File Remove Button */
+.file-remove-btn {
+    background: transparent;
+    border: none;
+    border-radius: var(--btn-radius-sm);
+    color: var(--neutral-light);
+}
+
+.file-remove-btn:hover {
+    background: var(--background-gray);
+    color: var(--text-primary);
+}
+
+/* Send Button (Primary Icon Button) */
+.send-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: var(--btn-radius);
+    cursor: pointer;
+    transition: var(--btn-transition);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    color: var(--primary-blue);
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--btn-shadow-primary);
 }
 
-.show-artifact-btn:hover {
-    background: var(--accent-blue-soft);
-    color: var(--primary-blue-dark);
-    border-color: var(--primary-blue-dark);
-    transform: scale(1.05);
-    box-shadow: 0 2px 6px rgba(7, 42, 200, 0.15);
+.send-btn:hover {
+    background: var(--primary-blue-dark);
+    box-shadow: var(--btn-shadow-primary-hover);
 }
 
-.show-artifact-btn svg {
-    width: 18px;
-    height: 18px;
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--neutral-light);
+}
+
+.send-btn svg {
+    width: var(--btn-icon-size-md);
+    height: var(--btn-icon-size-md);
 }
 
 /* Hide show-artifact button when artifact panel is open */
@@ -1357,29 +1506,7 @@ body.artifact-open .show-artifact-btn {
     gap: 8px;
 }
 
-.message-action-btn {
-    background: none;
-    border: none;
-    padding: 4px 8px;
-    cursor: pointer;
-    color: var(--neutral-light);
-    transition: all 0.2s;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-}
-
-.message-action-btn:hover {
-    background: var(--background-gray);
-    color: var(--primary-blue);
-}
-
-.message-action-btn svg {
-    width: 14px;
-    height: 14px;
-}
+/* message-action-btn styles moved to unified ghost buttons section */
 
 .chat-input-container {
     padding: 16px 32px;
@@ -1430,26 +1557,7 @@ body.artifact-open .show-artifact-btn {
     flex-shrink: 0;
 }
 
-.file-remove-btn {
-    margin-left: 4px;
-    padding: 2px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--neutral-light);
-    display: flex;
-    align-items: center;
-    transition: color 0.2s;
-}
-
-.file-remove-btn:hover {
-    color: #ef4444;
-}
-
-.file-remove-btn svg {
-    width: 14px;
-    height: 14px;
-}
+/* file-remove-btn styles moved to unified utility buttons section */
 
 .chat-input-wrapper {
     display: flex;
@@ -1506,61 +1614,7 @@ body.artifact-open .show-artifact-btn {
     justify-content: space-between;
 }
 
-.attach-file-btn {
-    padding: 6px 12px;
-    background: var(--background-gray);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text-secondary);
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.attach-file-btn:hover {
-    background: var(--accent-blue-soft);
-    border-color: var(--primary-blue);
-    color: var(--primary-blue);
-}
-
-.attach-file-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-.send-btn {
-    width: 36px;
-    height: 36px;
-    background: var(--primary-blue);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.send-btn:hover {
-    background: var(--primary-blue-dark);
-    transform: scale(1.05);
-}
-
-.send-btn:disabled {
-    background: var(--neutral-light);
-    cursor: not-allowed;
-    transform: none;
-}
-
-.send-btn svg {
-    width: 18px;
-    height: 18px;
-}
+/* attach-file-btn and send-btn styles moved to unified utility buttons section */
 
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 1200px) {
@@ -1666,34 +1720,7 @@ body.artifact-open .show-artifact-btn {
   font-weight: 500;
 }
 
-/* Action Buttons */
-.copy-artifact-btn,
-.close-panel-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.copy-artifact-btn:hover,
-.close-panel-btn:hover {
-  background: var(--background-gray);
-  border-color: var(--primary-blue);
-  color: var(--primary-blue);
-}
-
-.copy-artifact-btn svg,
-.close-panel-btn svg {
-  width: 18px;
-  height: 18px;
-}
+/* Action Buttons - styles inherited from .btn-icon above */
 
 /* Artifact List Dropdown */
 .artifact-list-dropdown {
@@ -1889,24 +1916,7 @@ body.artifact-open .show-artifact-btn {
   color: var(--text-secondary);
 }
 
-.thumbnail-open-btn {
-  padding: 6px 12px;
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: var(--primary-blue);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.thumbnail-open-btn:hover {
-  background: var(--primary-blue);
-  color: white;
-  border-color: var(--primary-blue);
-}
+/* thumbnail-open-btn styles moved to unified utility buttons section */
 
 /* Document Artifact */
 .artifact-document {
@@ -2079,22 +2089,6 @@ body.artifact-open .show-artifact-btn {
   height: auto;
 }
 
-/* Copy Button Feedback */
-.copy-artifact-btn.copied {
-  background: var(--success-green-light) !important;
-  border-color: var(--success-green) !important;
-  color: var(--success-green) !important;
-}
-
-.copy-artifact-btn.copied svg {
-  animation: checkmark 0.3s ease;
-}
-
-@keyframes checkmark {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
 
 /* Panel Backdrop (mobile) */
 .artifact-panel-backdrop {

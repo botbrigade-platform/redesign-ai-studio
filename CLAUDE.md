@@ -120,19 +120,38 @@ redesign-ai-studio/
    - **Input Area:** Text input with send button and attachment option
    - **Tooltip:** Truncated agent descriptions show full text on hover (`.description-tooltip`)
 
-4. **Artifact Display Panel** (detail-chat.html) - NEW FEATURE
+4. **Artifact Display Panel** (detail-chat.html)
    - **Slide-in Panel:** 500px width panel from right side (`.artifact-panel`)
    - **Artifact Types:**
-     - **Code:** Syntax highlighting via Prism.js (Python, JavaScript, etc.)
-     - **Documents:** Markdown rendering via Marked.js
-     - **Charts:** Interactive charts via Chart.js
+     - **Code:** Syntax highlighting via Prism.js (Python, JavaScript, HTML, CSS, JSON)
+     - **Documents:** Markdown rendering via Marked.js with formatted typography
+     - **Charts:** Interactive charts via Chart.js (bar, line, pie charts supported)
    - **Features:**
-     - Copy to clipboard functionality
-     - Artifact list dropdown (shows all artifacts in conversation)
-     - Close button and ESC key support
-   - **Responsive:** Desktop = slide-in panel, Mobile = fullscreen overlay with backdrop
+     - Copy to clipboard functionality with visual feedback (checkmark animation)
+     - Artifact list dropdown (shows all artifacts in conversation with icons)
+     - Multiple close options: Close button, ESC key, backdrop click (mobile)
+     - Artifact switching without closing panel
+     - Line numbers for code artifacts
+   - **Responsive:**
+     - Desktop: Slide-in panel with resizable width
+     - Mobile: Fullscreen overlay with dark backdrop
    - **Thumbnails:** Artifact previews in chat messages (`.artifact-thumbnail`)
-   - **State:** Managed by `artifact-manager.js`
+   - **State Management:** Managed by `ArtifactStore` in `artifact-manager.js`
+   - **Sample Content:** 3 pre-loaded artifacts (financial report, Python script, revenue chart)
+
+5. **Resizable Split-Pane Layout** (detail-chat.html)
+   - **Resize Handle:** Vertical draggable divider between chat and artifact panel (`.resize-handle`)
+   - **Functionality:**
+     - Mouse drag to resize chat/artifact panel widths
+     - Visual feedback on hover (blue highlight)
+     - Cursor changes to `col-resize` during drag
+     - Smooth real-time resizing
+   - **Constraints:**
+     - Minimum chat width: Prevents over-compression
+     - Minimum artifact panel width: 400px (maintains readability)
+     - Maximum artifact panel width: 70% of viewport
+   - **Implementation:** Event listeners in `app.js` (`startResize`, `doResize`, `stopResize`)
+   - **Responsive:** Only active on desktop (>768px), disabled on mobile
 
 #### State Management Patterns
 
@@ -188,19 +207,51 @@ php -S localhost:8000
 - **No Build Step:** Changes visible immediately on page refresh
 
 **3. JavaScript Implementation**
-- **Main Logic:** `assets/js/app.js` (~18KB)
-  - `loadSidebar()` - Fetches and loads sidebar component
-  - `generateAgentCards()` - Dynamically creates agent cards from data
-  - `toggleSidebar()` - Sidebar collapse/expand
-  - `toggleUserMenu()` - User dropdown menu
+- **Main Logic:** `assets/js/app.js` (~18KB, 566 lines)
+  - **Sidebar Management:**
+    - `loadSidebar(activePage)` - Fetches and loads sidebar component
+    - `toggleSidebar()` - Sidebar collapse/expand
+    - `addChatSidebarContent()` - Adds chat-specific sidebar content (conversation history, new thread button)
+  - **Agent Card System:**
+    - `createAgentCard(agent)` - Generates HTML for a single agent card
+    - `renderAgentCards()` - Renders all agent cards to DOM from agentsData array
+  - **User Interface:**
+    - `toggleUserMenu()` - Toggle user dropdown visibility
+    - `initChatTextarea()` - Auto-resize textarea in chat input
+  - **Artifact Panel Control:**
+    - `openArtifactPanel(artifactId)` - Opens artifact panel with specific artifact
+    - `closeArtifactPanel()` - Closes artifact panel and restores sidebar state
+    - `getLatestArtifact()` - Retrieves most recent artifact by timestamp
+    - `toggleArtifactList()` - Toggle artifact list dropdown
+    - `copyArtifactContent()` - Copy artifact content to clipboard
+    - `showCopyFeedback()` - Visual feedback when copy succeeds
+    - `renderArtifact(artifact)` - Renders artifact content with syntax highlighting
+  - **Resizable Split-Pane:**
+    - `initializeResizeHandler()` - Setup resizable divider between chat and artifact panel
+    - `startResize(e)`, `doResize(e)`, `stopResize()` - Mouse drag handlers for resize
   - Search and filter functionality (UI-only, no backend)
-- **Artifact Panel:** `assets/js/artifact-manager.js` (~10KB)
-  - `openArtifact()` - Opens artifact panel with content
-  - `closeArtifact()` - Closes panel
-  - `copyArtifact()` - Copy to clipboard
-  - Syntax highlighting integration (Prism.js)
-  - Chart rendering integration (Chart.js)
-  - Markdown rendering integration (Marked.js)
+
+- **Artifact Panel:** `assets/js/artifact-manager.js` (~10KB, 374 lines)
+  - **Artifact Store Object:**
+    - `ArtifactStore.add(artifact)` - Add artifact to store
+    - `ArtifactStore.get(id)` - Retrieve artifact by ID
+    - `ArtifactStore.getAll()` - Get all artifacts as array
+    - `ArtifactStore.setCurrent(id)` - Set current active artifact
+    - `ArtifactStore.getCurrent()` - Get current artifact
+    - `ArtifactStore.updateArtifactCount()` - Update count display in UI
+  - **Rendering Functions:**
+    - `renderDocumentArtifact(artifact)` - Converts markdown to HTML (uses Marked.js)
+    - `renderCodeArtifact(artifact)` - Code with syntax highlighting (uses Prism.js)
+    - `renderChartArtifact(artifact)` - Canvas-based chart rendering (uses Chart.js)
+    - `initializeChart(artifact)` - Initialize Chart.js from config
+    - `renderArtifactContent(artifact)` - Dispatcher to correct renderer based on type
+    - `renderArtifactList()` - Render dropdown list of all artifacts
+  - **Utility Functions:**
+    - `escapeHTML(str)` - Sanitize HTML strings
+    - `formatTimestamp(isoString)` - Format ISO timestamps to readable format
+    - `getArtifactIcon(type)` - Return SVG icon for artifact type
+    - `getArtifactMeta(artifact)` - Get metadata string (language, word count, chart type)
+  - **Sample Artifacts:** 3 hardcoded artifacts (financial report, Python script, revenue chart)
 
 #### Adding New Features
 
@@ -286,6 +337,156 @@ With file attachments:
    - SVG icons use `currentColor` for proper theming
    - Proper semantic HTML structure
 
+### Data Structures
+
+The application uses the following data structures for managing agents, artifacts, and messages:
+
+#### Agent Object
+```javascript
+{
+  name: string,           // Agent display name (e.g., "Public Data Insight Agent")
+  description: string,    // Agent capability description (2-line clamp in UI)
+  status: "active" | "inactive",  // Agent operational status
+  model: string,          // AI model identifier (e.g., "intelligence-n1", "gpt-4")
+  created: string,        // Creation date (e.g., "Oct 21, 2025")
+  tools: number           // Number of integrated tools (0-5+, displays badge if > 0)
+}
+```
+
+**Example:**
+```javascript
+{
+  name: "Public Data Insight Agent",
+  description: "Specialized in analyzing and extracting insights from public datasets...",
+  status: "active",
+  model: "intelligence-n1",
+  created: "Oct 21, 2025",
+  tools: 0
+}
+```
+
+**Storage:** `agentsData` array in `assets/js/app.js`
+
+#### Artifact Object
+```javascript
+{
+  id: string,             // Unique identifier (e.g., "artifact-001")
+  type: "code" | "document" | "chart",  // Artifact type determines renderer
+  title: string,          // Display title shown in panel header
+  content: string,        // Raw content (code/markdown text or Chart.js config JSON)
+  language: string,       // Code language for syntax highlighting (e.g., "python", "javascript")
+  timestamp: string,      // ISO 8601 timestamp (e.g., "2025-10-24T13:16:00Z")
+  messageId: string,      // Associated message ID for linking
+  metadata: {
+    wordCount?: number,   // For document artifacts
+    lineCount?: number,   // For code artifacts
+    chartType?: string    // For charts: "bar", "line", "pie", etc.
+  }
+}
+```
+
+**Example (Code Artifact):**
+```javascript
+{
+  id: "artifact-002",
+  type: "code",
+  title: "Data Analysis Script",
+  content: "import pandas as pd\nimport numpy as np\n...",
+  language: "python",
+  timestamp: "2025-10-24T13:16:00Z",
+  messageId: "msg-002",
+  metadata: {
+    lineCount: 45
+  }
+}
+```
+
+**Example (Chart Artifact):**
+```javascript
+{
+  id: "artifact-003",
+  type: "chart",
+  title: "Revenue Growth Q3 2024",
+  content: '{"type":"bar","data":{"labels":["July","August","September"],...}}',
+  language: null,
+  timestamp: "2025-10-24T13:17:00Z",
+  messageId: "msg-003",
+  metadata: {
+    chartType: "bar"
+  }
+}
+```
+
+**Storage:** `ArtifactStore` object in `assets/js/artifact-manager.js`
+
+#### Message Object (Hardcoded in HTML)
+```javascript
+{
+  type: "user" | "agent",    // Message sender type
+  avatar: string,            // Avatar initials (e.g., "U" for user, "PD" for agent)
+  sender: string,            // Display name (e.g., "You", "Public Data Agent")
+  timestamp: string,         // Formatted time (e.g., "01:11 PM")
+  text: string,              // Message content (supports markdown)
+  attachments?: Array,       // Optional file attachments
+  artifactId?: string        // Optional link to artifact
+}
+```
+
+**Note:** Messages are currently hardcoded in `pages/detail-chat.html` as HTML blocks, not JavaScript objects. Structure shown above represents the conceptual data model.
+
+### Icon Library
+
+The project includes a comprehensive SVG icon library in `assets/icons/icons.svg` (131 lines). All icons use stroke-based design with `currentColor` for easy theming.
+
+**Available Icons:**
+
+**Navigation & Actions:**
+- `arrow-left` - Back navigation, sidebar toggle
+- `plus-icon` - Create/add actions
+- `x-icon` - Close buttons
+- `menu-dots` - Three-dot menu (vertical)
+- `search-icon` - Search functionality
+
+**Agent & Dashboard:**
+- `robot-icon` - Agent/bot representation
+- `dashboard-icon` - Dashboard/grid view
+- `chat-icon` - Chat/conversation
+- `tool-icon` - Tool/integration indicator
+- `settings-icon` - Settings/configuration
+
+**View Controls:**
+- `grid-view-icon` - Grid layout view
+- `list-view-icon` - List layout view
+- `eye-icon` - View/preview actions
+- `edit-icon` - Edit actions
+
+**File & Media:**
+- `file-icon` - Document/file representation
+- `image-icon` - Image files
+- `attach-icon` - Paperclip for attachments
+
+**Communication:**
+- `send-icon` - Send message button
+- `copy-icon` - Copy to clipboard
+- `share-icon` - Share functionality
+
+**User:**
+- `logout-icon` - Logout/sign out
+
+**Icon Specifications:**
+- **Design:** Stroke-based with `stroke-width: 2`
+- **Color:** Uses `currentColor` to inherit from parent
+- **Style:** `stroke-linecap="round"` and `stroke-linejoin="round"`
+- **Sizes:** 16px (default), 20px (buttons), 24px (headers)
+- **Usage:** Inline SVG in HTML with `<use>` references
+
+**Example Usage:**
+```html
+<svg width="20" height="20">
+  <use href="assets/icons/icons.svg#chat-icon"/>
+</svg>
+```
+
 ### Common Patterns
 
 **Button Styles:**
@@ -319,6 +520,20 @@ With file attachments:
 
 **What Works (Functional):**
 - ✅ Sidebar collapse/expand toggle (JavaScript implemented)
+- ✅ Sidebar component loading via fetch
+- ✅ Dynamic agent card generation from data array
+- ✅ User menu dropdown toggle
+- ✅ Chat textarea auto-resize
+- ✅ Artifact display panel (code, document, chart)
+- ✅ Artifact panel slide-in/out animation
+- ✅ Artifact list dropdown with selection
+- ✅ Copy to clipboard functionality with visual feedback
+- ✅ Syntax highlighting (Prism.js for code artifacts)
+- ✅ Markdown rendering (Marked.js for document artifacts)
+- ✅ Chart rendering (Chart.js for chart artifacts)
+- ✅ Split-pane resizable layout (drag to resize)
+- ✅ Artifact thumbnails in chat messages
+- ✅ ESC key to close artifact panel
 - ✅ Responsive layout adjustments
 - ✅ Hover states and visual feedback
 - ✅ Static content display
@@ -402,14 +617,79 @@ When integrating with a backend system:
 - `.message-bubble` - Message content bubble
 - `.message-time` - Timestamp below message
 - `.message-attachments` - File attachment section
+- `.chat-input-container` - Chat input area with textarea
+- `.input-group` - Textarea wrapper with auto-resize
+- `.attached-files` - Attached files preview section
 
-**Buttons:**
-- `.btn-primary` - Primary action button (blue)
-- `.btn-secondary` - Secondary action button (outline)
-- `.btn-chat` - Chat action button
-- `.icon-btn` - Icon-only button
-- `.new-thread-btn` - New chat button in sidebar
+**Artifact Panel:**
+- `.artifact-panel` - Main artifact panel container (500px width)
+- `.artifact-panel.open` - Open state (slides in from right)
+- `.artifact-panel-header` - Panel header with controls
+- `.artifact-list-btn` - Artifact list dropdown toggle
+- `.artifact-list-dropdown` - Dropdown with all artifacts
+- `.artifact-content-area` - Content rendering area
+- `.artifact-empty-state` - Empty state message
+- `.artifact-document` - Document artifact container
+- `.artifact-code` - Code artifact with syntax highlighting
+- `.artifact-chart` - Chart artifact with canvas
+- `.artifact-thumbnail` - Thumbnail preview in messages
+- `.artifact-panel-backdrop` - Mobile fullscreen backdrop
+- `.resize-handle` - Draggable divider for split-pane
+- `.copy-artifact-btn` - Copy button with "copied" state
+- `.copy-artifact-btn.copied` - Visual feedback state after copy
+
+**Buttons (Unified System):**
+
+*Base Class:*
+- `.btn` - Base button class (must be combined with variant and size)
+
+*Variants:*
+- `.btn-primary` - Filled blue with shimmer effect (main CTAs)
+- `.btn-secondary` - Outlined style (secondary actions)
+- `.btn-ghost` - Transparent with hover background (subtle actions)
+
+*Sizes:*
+- `.btn-lg` - Large (40px height) - Headers, important CTAs
+- `.btn-md` - Medium (32px height) - Default size
+- `.btn-sm` - Small (28px height) - Compact areas
+- `.btn-xs` - Extra small (20px height) - Inline elements
+
+*Types:*
+- `.btn-icon` - Icon-only button (square)
+- `.btn-text` - Text-only button
+- (default) - Icon + text button
+
+*Specialized:*
+- `.menu-btn` - Three-dot menu button (32px square)
+- `.send-btn` - Primary send button in chat input
 - `.sidebar-toggle` - Sidebar collapse toggle
+- `.new-thread-btn` - New chat button in sidebar
+
+*Usage Examples:*
+```html
+<!-- Primary button with icon and text -->
+<button class="btn btn-primary btn-md">
+  <svg>...</svg>
+  <span>Create Agent</span>
+</button>
+
+<!-- Secondary button -->
+<button class="btn btn-secondary btn-md">
+  <svg>...</svg>
+  <span>View</span>
+</button>
+
+<!-- Icon-only ghost button -->
+<button class="btn btn-ghost btn-md btn-icon" title="Share">
+  <svg>...</svg>
+</button>
+
+<!-- Small ghost button with text -->
+<button class="btn btn-ghost btn-sm">
+  <svg>...</svg>
+  <span>Copy</span>
+</button>
+```
 
 **Navigation:**
 - `.nav-item` - Navigation menu item
@@ -428,6 +708,36 @@ When integrating with a backend system:
 **Toggle Sidebar:**
 ```javascript
 document.querySelector('.sidebar').classList.toggle('collapsed');
+```
+
+**Open Artifact Panel:**
+```javascript
+openArtifactPanel('artifact-001'); // Opens specific artifact
+```
+
+**Close Artifact Panel:**
+```javascript
+closeArtifactPanel(); // Closes panel and restores sidebar
+```
+
+**Add New Artifact:**
+```javascript
+ArtifactStore.add({
+  id: 'artifact-004',
+  type: 'code',
+  title: 'New Script',
+  content: 'console.log("Hello");',
+  language: 'javascript',
+  timestamp: new Date().toISOString(),
+  messageId: 'msg-004',
+  metadata: { lineCount: 1 }
+});
+```
+
+**Render Artifact:**
+```javascript
+const artifact = ArtifactStore.get('artifact-001');
+renderArtifact(artifact);
 ```
 
 **Change Agent Status:**
@@ -450,20 +760,61 @@ document.querySelector('.sidebar').classList.toggle('collapsed');
 }
 ```
 
+### Key Interactions & Workflows
+
+**Artifact Panel Workflow:**
+1. User clicks "Show Artifact" button or artifact thumbnail in message
+2. `openArtifactPanel(artifactId)` is called
+3. Panel slides in from right (300ms animation)
+4. Sidebar collapses to 60px to make room
+5. Artifact content is rendered based on type (code/document/chart)
+6. User can switch artifacts via dropdown without closing panel
+7. User closes panel via close button, ESC key, or backdrop click
+8. `closeArtifactPanel()` restores sidebar to original state
+
+**Split-Pane Resize Workflow:**
+1. User hovers over resize handle (`.resize-handle`)
+2. Handle highlights blue, cursor changes to `col-resize`
+3. User clicks and drags handle left/right
+4. `doResize()` calculates new widths in real-time
+5. Chat and artifact panel resize simultaneously
+6. Constraints prevent over-compression (min/max widths)
+7. User releases mouse, resize completes
+
+**Agent Card Generation Workflow:**
+1. Page loads, `DOMContentLoaded` event fires
+2. `renderAgentCards()` iterates over `agentsData` array
+3. For each agent, `createAgentCard(agent)` generates HTML
+4. HTML includes status badge, metadata, action buttons
+5. Inactive agents get reduced opacity and disabled chat button
+6. Cards are inserted into `.agents-grid` container
+7. Grid layout auto-arranges cards responsively
+
+**Sidebar Component Loading:**
+1. `loadSidebar(activePage)` fetches `components/sidebar.html`
+2. HTML is inserted into `.sidebar` container
+3. Active navigation item gets `.active` class based on page
+4. If on detail-chat.html, `addChatSidebarContent()` adds conversation history
+5. Event listeners attached for toggle button and navigation items
+
 ### File Locations
 
-| What to Edit | File | Line Range (approx) |
+| What to Edit | File | Line Range |
 |-------------|------|---------------------|
-| Agent cards data | `assets/js/app.js` | agentsData array |
-| Sidebar component | `components/sidebar.html` | Full file |
-| Chat messages | `pages/detail-chat.html` | 120-400 |
-| Artifact panel logic | `assets/js/artifact-manager.js` | Full file |
-| Color scheme | `assets/css/styles.css` | 8-28 (:root) |
-| Sidebar styles | `assets/css/styles.css` | 37-150 |
-| Agent card styles | `assets/css/styles.css` | 300-600 |
-| Chat styles | `assets/css/styles.css` | 700-1100 |
-| Artifact panel styles | `assets/css/styles.css` | 800-1000 |
-| Responsive rules | `assets/css/styles.css` | 1200-1318 |
+| Agent cards data | `assets/js/app.js` | Lines 16-57 (agentsData array) |
+| Sidebar component | `components/sidebar.html` | Full file (36 lines) |
+| Chat messages | `pages/detail-chat.html` | Lines 120-400 (approx) |
+| Artifact panel logic | `assets/js/artifact-manager.js` | Full file (374 lines) |
+| **CSS Architecture:** |
+| CSS Variables/Design Tokens | `assets/css/styles.css` | Lines 8-51 |
+| Base Styles | `assets/css/styles.css` | Lines 53-58 |
+| Sidebar Styles | `assets/css/styles.css` | Lines 60-354 |
+| Unified Button System | `assets/css/styles.css` | Lines 390-622 |
+| Badges | `assets/css/styles.css` | Lines 623-662 |
+| Agents Page Styles | `assets/css/styles.css` | Lines 664-999 |
+| Chat Page Styles | `assets/css/styles.css` | Lines 1001-1617 |
+| Artifact Panel Styles | `assets/css/styles.css` | Lines 1645-1318 |
+| Responsive Styles | `assets/css/styles.css` | Lines 1619-1643 |
 
 ### Project Constraints
 
