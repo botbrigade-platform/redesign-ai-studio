@@ -376,14 +376,14 @@ function renderArtifact(artifact) {
     }, 50);
   }
 
-  // Show/hide pin button based on artifact type
-  const pinBtn = document.getElementById('pin-artifact-btn');
-  if (pinBtn) {
+  // Show/hide save to dashboard button based on artifact type
+  const saveToDashboardBtn = document.getElementById('save-to-dashboard-btn');
+  if (saveToDashboardBtn) {
     if (artifact.type === 'chart') {
-      pinBtn.style.display = '';
-      pinBtn.onclick = () => showPinModal(artifact.id);
+      saveToDashboardBtn.style.display = '';
+      saveToDashboardBtn.onclick = () => showPinModal(artifact.id);
     } else {
-      pinBtn.style.display = 'none';
+      saveToDashboardBtn.style.display = 'none';
     }
   }
 }
@@ -604,7 +604,7 @@ function showPinModal(artifactId) {
     modal.innerHTML = `
       <div class="modal-card">
         <div class="modal-header">
-          <h3>Pin Chart to Dashboard</h3>
+          <h3>Save Chart to Dashboard</h3>
           <button class="btn btn-ghost btn-sm btn-icon" onclick="closePinModal()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

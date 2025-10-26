@@ -628,6 +628,13 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
+}
+
+.badge svg {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
 }
 
 .badge.status-active {

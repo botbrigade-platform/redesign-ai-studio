@@ -60,11 +60,13 @@
             <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/>
         </symbol>
 
-        <!-- Download Icon -->
-        <symbol id="download-icon" viewBox="0 0 24 24">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="7 10 12 15 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="12" y1="15" x2="12" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Auto Layout Icon -->
+        <symbol id="auto-layout-icon" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="3" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="3" y="14" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="14" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 6h3M8 17h3M17 6h3M17 17h3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </symbol>
 
         <!-- Expand/Maximize Icon -->
@@ -123,7 +125,7 @@
                     <p>View and organize your pinned charts</p>
                 </div>
                 <div class="header-actions">
-                    <div class="date-range-selector">
+                    <div class="date-range-selector" style="display: none;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <use href="#calendar-icon"/>
                         </svg>
@@ -135,11 +137,11 @@
                         </svg>
                         <span>Clear All</span>
                     </button>
-                    <button class="btn btn-primary btn-md">
+                    <button class="btn btn-secondary btn-md">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <use href="#download-icon"/>
+                            <use href="#auto-layout-icon"/>
                         </svg>
-                        <span>Download</span>
+                        <span>Auto Layout</span>
                     </button>
                     <div class="user-menu">
                         <button class="user-avatar" onclick="toggleUserMenu()">
