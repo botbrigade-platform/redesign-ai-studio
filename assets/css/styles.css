@@ -1006,6 +1006,11 @@ body {
 .card-actions {
     display: flex;
     gap: 8px;
+    justify-content: space-between;
+}
+
+.card-actions .btn {
+    flex: 1;
 }
 
 /* ===== CHAT PAGE STYLES ===== */
