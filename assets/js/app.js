@@ -218,12 +218,12 @@ function createAgentCard(agent) {
                     </svg>
                     View
                 </button>
-                <button class="btn btn-secondary btn-md">
+                <a href="edit-agent.html" class="btn btn-secondary btn-md">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <use href="#edit-icon"/>
                     </svg>
                     Edit
-                </button>
+                </a>
             </div>
         </div>
     `;

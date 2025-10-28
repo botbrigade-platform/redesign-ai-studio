@@ -26,15 +26,17 @@ redesign-ai-studio/
 ├── pages/                            # HTML pages
 │   ├── dashboard.html                # Dashboard with pinned charts (Gridstack)
 │   ├── agents.html                   # AI Agents grid/list view
-│   └── detail-chat.html              # Chat interface with artifact display panel
+│   ├── detail-chat.html              # Chat interface with artifact display panel
+│   └── edit-agent.html               # Edit agent configuration form
 │
 ├── assets/                           # All static assets
 │   ├── css/
-│   │   └── styles.css                # Comprehensive stylesheet (~100KB, 2895 lines)
+│   │   └── styles.css                # Comprehensive stylesheet (~115KB, 3388 lines)
 │   ├── js/
 │   │   ├── app.js                    # Main JavaScript logic (~30KB, 766 lines)
 │   │   ├── artifact-manager.js       # Artifact panel functionality (~15KB, 373 lines)
-│   │   └── dashboard.js              # Dashboard grid logic (~35KB, 872 lines)
+│   │   ├── dashboard.js              # Dashboard grid logic (~35KB, 872 lines)
+│   │   └── edit-agent.js             # Edit agent form logic (~12KB, 385 lines)
 │   └── icons/
 │       └── icons.svg                 # SVG icon library
 │
@@ -56,11 +58,13 @@ redesign-ai-studio/
 - `pages/dashboard.html` - Dashboard with pinned chart visualizations (Gridstack.js drag-drop grid)
 - `pages/agents.html` - AI Agents Dashboard with filtering, search, agent cards
 - `pages/detail-chat.html` - Chat interface with artifact display panel (code/document/chart)
+- `pages/edit-agent.html` - Edit agent configuration form (basic info, tools, model settings)
 
 **Key JavaScript Files:**
 - `assets/js/app.js` - Sidebar loading, search, filters, user menu, agent card generation, pin modal
 - `assets/js/artifact-manager.js` - Artifact panel (slide-in panel, syntax highlighting, copy-to-clipboard)
 - `assets/js/dashboard.js` - Dashboard grid management (Gridstack integration, chart rendering, state persistence)
+- `assets/js/edit-agent.js` - Edit agent form (character counters, tool selection, model config sliders)
 
 ### Design System
 
@@ -159,6 +163,49 @@ redesign-ai-studio/
      - Maximum artifact panel width: 70% of viewport
    - **Implementation:** Event listeners in `app.js` (`startResize`, `doResize`, `stopResize`)
    - **Responsive:** Only active on desktop (>768px), disabled on mobile
+
+6. **Edit Agent Page** (edit-agent.html)
+   - **Breadcrumb:** Home > Agents > [Agent Name] > Edit
+   - **Form Sections:**
+     - **Basic Information:** Name (required, 255 chars), Description (1000 chars), Instructions (required, 10000 chars)
+       - Real-time character counters (e.g., "27/255")
+       - Character count updates on input
+     - **Active Status:** Toggle switch to enable/disable agent availability
+     - **MCP Tools:** Two-panel tool selection interface
+       - Search bar with icon for filtering tools
+       - "Active Only" filter button
+       - **Selected Tools Panel:** Shows currently selected tools with count, "Clear All" button
+       - **Available Tools Panel:** Shows unselected tools to add
+       - Tool cards display: name, status badge, description, npm package
+       - Add/Remove buttons per tool card
+       - Sample tools: Brave Search, Sequential Thinking, Notion, GitHub, File System
+     - **Model Configuration:** Collapsible section with toggle
+       - Model dropdown (Intelligence N1, Brain T4, Synapse M3, GPT-4, Custom)
+       - **Basic Parameters:**
+         - Temperature slider (0-2, step 0.01) with live value display
+         - Top P slider (0-1, step 0.01) with live value display
+         - Max Tokens number input (optional)
+       - **Advanced Parameters:**
+         - Frequency Penalty slider (-2 to 2, step 0.01)
+         - Presence Penalty slider (-2 to 2, step 0.01)
+         - Seed number input (optional, for deterministic outputs)
+         - Stop Sequences tag input (add/remove tags, press Enter or click Add)
+   - **Form Actions:** Cancel button (returns to agents.html), Update Agent button (primary)
+   - **Form Styling:**
+     - Card-based sections with headers and descriptions
+     - Custom toggle switches (blue when active)
+     - Custom range sliders with blue thumbs
+     - Tag input with removable tags (blue background)
+     - Two-column responsive tool panels (stacks on mobile)
+   - **JavaScript Features:**
+     - Character counters update on input (`initCharacterCounters`)
+     - Slider values display in real-time (`initSliders`)
+     - Model config panel collapses/expands with toggle (`initToggles`)
+     - Tool search filters by name/description/package (`filterTools`)
+     - Tool selection moves between panels (`addTool`, `removeTool`)
+     - Stop sequence tags can be added/removed (`addStopSequence`, `removeStopSequence`)
+     - Form submission shows alert (static prototype, no backend)
+   - **Responsive:** Form stacks vertically on mobile, tool panels become single column
 
 #### State Management Patterns
 
