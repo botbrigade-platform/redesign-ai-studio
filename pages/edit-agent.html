@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Agent | BotBrigade AI Studio</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- SVG Sprite Icons -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <!-- Sidebar Toggle Arrow -->
+        <symbol id="arrow-left" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+
+        <!-- Robot/Agent Icon -->
+        <symbol id="robot-icon" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 7v4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <line x1="8" y1="16" x2="8" y2="16" stroke="currentColor" stroke-width="2"/>
+            <line x1="16" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+
+        <!-- Dashboard Grid -->
+        <symbol id="dashboard-icon" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="3" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="14" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="3" y="14" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+
+        <!-- Settings Icon -->
+        <symbol id="settings-icon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 1v6m0 6v6" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="m5.64 5.64 4.24 4.24m6.36 6.36 4.24 4.24" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M1 12h6m6 0h6" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="m5.64 18.36 4.24-4.24m6.36-6.36 4.24-4.24" fill="none" stroke="currentColor" stroke-width="2"/>
+        </symbol>
+
+        <!-- Logout Icon -->
+        <symbol id="logout-icon" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="16 17 21 12 16 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="21" y1="12" x2="9" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+
+        <!-- Search Icon -->
+        <symbol id="search-icon" viewBox="0 0 16 16">
+            <path d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 14L10.5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+    </svg>
+
+    <!-- Sidebar will be loaded dynamically -->
+    <div class="sidebar" id="sidebar-container">
+        <!-- Sidebar content loaded dynamically by app.js -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-top">
+                <div class="breadcrumb">
+                    <a href="agents.html">Agents</a>
+                    <span>›</span>
+                    <span>Public Data Insight Agent</span>
+                </div>
+                <div class="header-actions">
+                    <button type="button" class="btn btn-ghost btn-md" onclick="window.location.href='agents.html'">
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="btn btn-ghost btn-md" form="editAgentForm">
+                        <span>Update Agent</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="edit-agent-container">
+            <form class="edit-agent-form" id="editAgentForm">
+                <!-- Basic Information Section -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <h3>Basic Information</h3>
+                        <p class="form-section-description">Configure the basic details of your agent</p>
+                    </div>
+                    <div class="form-section-content">
+                        <div class="form-group">
+                            <label for="agentName" class="form-label">
+                                Name <span class="required">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="agentName"
+                                class="form-input"
+                                value="Public Data Insight Agent"
+                                maxlength="255"
+                                required
+                            >
+                            <p class="form-help">
+                                Display name for the agent (1-255 characters) -
+                                <span id="nameCharCount">27</span>/255
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="agentDescription" class="form-label">Description</label>
+                            <textarea
+                                id="agentDescription"
+                                class="form-textarea"
+                                rows="4"
+                                maxlength="1000"
+                            >Specialized in analyzing and extracting insights from public datasets, supporting evidence-based decision-making for government operations.</textarea>
+                            <p class="form-help">
+                                Optional description (max 1000 characters) -
+                                <span id="descCharCount">153</span>/1000
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="agentInstructions" class="form-label">
+                                Instructions <span class="required">*</span>
+                            </label>
+                            <textarea
+                                id="agentInstructions"
+                                class="form-textarea"
+                                rows="8"
+                                maxlength="10000"
+                                required
+                            >You are a Public Data Insight Agent specialized in analyzing public sector data and generating actionable insights. Your role is to help government officials make evidence-based decisions by interpreting datasets, summarizing findings, detecting trends, and suggesting policy implications.</textarea>
+                            <p class="form-help">
+                                Private instructions for the agent (1-10000 characters) -
+                                <span id="instructionsCharCount">282</span>/10000
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Status Section -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <h3>Active Status</h3>
+                        <p class="form-section-description">When active, this agent will be available for use</p>
+                    </div>
+                    <div class="form-section-content">
+                        <div class="form-group">
+                            <label class="toggle-label">
+                                <input type="checkbox" class="toggle-input" id="agentActive" checked>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Active</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MCP Tools Section -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <h3>MCP Tools</h3>
+                        <p class="form-section-description">Select tools from the MCP registry to integrate with this agent</p>
+                    </div>
+                    <div class="form-section-content">
+                        <div class="tools-controls">
+                            <div class="tools-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <use href="../assets/icons/icons.svg#search-icon"/>
+                                </svg>
+                                <input
+                                    type="text"
+                                    id="toolSearch"
+                                    class="form-input"
+                                    placeholder="Search tools..."
+                                >
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="activeOnlyBtn">
+                                Active Only
+                            </button>
+                        </div>
+
+                        <div class="tools-panels">
+                            <!-- Selected Tools -->
+                            <div class="tools-panel selected-tools">
+                                <div class="tools-panel-header">
+                                    <h4>Selected Tools</h4>
+                                    <span class="tools-count"><span id="selectedCount">2</span> tools selected</span>
+                                    <button type="button" class="btn btn-ghost btn-xs" id="clearAllTools">Clear All</button>
+                                </div>
+                                <div class="tools-list" id="selectedToolsList">
+                                    <!-- Selected tools will be rendered here -->
+                                </div>
+                            </div>
+
+                            <!-- Available Tools -->
+                            <div class="tools-panel available-tools">
+                                <div class="tools-panel-header">
+                                    <h4>Available Tools</h4>
+                                    <span class="tools-count">Select tools to add to this agent</span>
+                                </div>
+                                <div class="tools-list" id="availableToolsList">
+                                    <!-- Available tools will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Configuration Section -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <h3>Model Configuration</h3>
+                        <p class="form-section-description">Configure advanced model parameters for fine-tuned control over AI behavior</p>
+                    </div>
+                    <div class="form-section-content">
+                        <div class="form-group">
+                            <label class="toggle-label">
+                                <input type="checkbox" class="toggle-input" id="enableModelConfig" checked>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Enable Model Configuration</span>
+                            </label>
+                        </div>
+
+                        <div id="modelConfigPanel" class="model-config-panel">
+                            <div class="form-group">
+                                <label for="modelSelect" class="form-label">
+                                    Model <span class="required">*</span>
+                                </label>
+                                <select id="modelSelect" class="form-select">
+                                    <option value="intelligence-n1">Intelligence N1</option>
+                                    <option value="brain-t4">Brain T4</option>
+                                    <option value="synapse-m3">Synapse M3</option>
+                                    <option value="gpt-4">GPT-4</option>
+                                    <option value="custom">Custom Model</option>
+                                </select>
+                                <p class="form-help">Select a pre-configured model or choose custom to enter your own</p>
+                            </div>
+
+                            <h4 class="subsection-title">Basic Parameters</h4>
+
+                            <div class="form-group">
+                                <label for="temperature" class="form-label">
+                                    Temperature
+                                    <span class="slider-value" id="temperatureValue">1.00</span>
+                                </label>
+                                <input
+                                    type="range"
+                                    id="temperature"
+                                    class="form-slider"
+                                    min="0"
+                                    max="2"
+                                    step="0.01"
+                                    value="1.00"
+                                >
+                                <p class="form-help">Controls randomness. Lower values (0.0-0.7) = more focused, higher values (0.8-2.0) = more creative</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="topP" class="form-label">
+                                    Top P (Nucleus Sampling)
+                                    <span class="slider-value" id="topPValue">1.00</span>
+                                </label>
+                                <input
+                                    type="range"
+                                    id="topP"
+                                    class="form-slider"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value="1.00"
+                                >
+                                <p class="form-help">Alternative to temperature. Lower values = more deterministic, higher values = more diverse</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxTokens" class="form-label">Max Tokens</label>
+                                <input
+                                    type="number"
+                                    id="maxTokens"
+                                    class="form-input"
+                                    placeholder="Leave empty for model default"
+                                    min="1"
+                                >
+                                <p class="form-help">Maximum number of tokens to generate in the response (leave empty for model default)</p>
+                            </div>
+
+                            <h4 class="subsection-title">Advanced Parameters</h4>
+
+                            <div class="form-group">
+                                <label for="frequencyPenalty" class="form-label">
+                                    Frequency Penalty
+                                    <span class="slider-value" id="frequencyPenaltyValue">0.00</span>
+                                </label>
+                                <input
+                                    type="range"
+                                    id="frequencyPenalty"
+                                    class="form-slider"
+                                    min="-2"
+                                    max="2"
+                                    step="0.01"
+                                    value="0.00"
+                                >
+                                <p class="form-help">Reduces repetition based on token frequency. Positive values decrease likelihood of repeated tokens</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="presencePenalty" class="form-label">
+                                    Presence Penalty
+                                    <span class="slider-value" id="presencePenaltyValue">0.00</span>
+                                </label>
+                                <input
+                                    type="range"
+                                    id="presencePenalty"
+                                    class="form-slider"
+                                    min="-2"
+                                    max="2"
+                                    step="0.01"
+                                    value="0.00"
+                                >
+                                <p class="form-help">Encourages talking about new topics. Positive values increase likelihood of new topics</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="seed" class="form-label">Seed</label>
+                                <input
+                                    type="number"
+                                    id="seed"
+                                    class="form-input"
+                                    placeholder="Leave empty for random"
+                                    min="0"
+                                >
+                                <p class="form-help">Random seed for deterministic outputs. Same seed + params = same output (leave empty for random)</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="stopSequences" class="form-label">Stop Sequences</label>
+                                <div class="tag-input-container">
+                                    <div class="tags" id="stopSequencesTags"></div>
+                                    <div class="tag-input-wrapper">
+                                        <input
+                                            type="text"
+                                            id="stopSequenceInput"
+                                            class="tag-input"
+                                            placeholder="Enter a sequence and press Enter"
+                                        >
+                                        <button type="button" class="btn btn-secondary btn-xs" id="addStopSequence">Add</button>
+                                    </div>
+                                </div>
+                                <p class="form-help">Sequences where the model will stop generating further tokens (press Enter or click Add)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/edit-agent.js"></script>
+</body>
+</html>
